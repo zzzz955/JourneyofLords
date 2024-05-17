@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "329732293524",
+    "project_id": "journeyoflords",
+    "storage_bucket": "journeyoflords.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329732293524:android:a60b186ec1194e72b7c581",
+        "android_client_info": {
+          "package_name": "com.firebase.jol"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTwA8Y2LljzgW_RUyGGke6702EIymDIUI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
