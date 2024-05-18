@@ -6,7 +6,6 @@ using Unity.VisualScripting;
 
 public class HeroBag : MonoBehaviour
 {
-    public ExcelReader excelReader;
     public GameObject heroPrefab; // 영웅 정보를 표시할 프리팹
     public Transform gridTransform; // GridLayoutGroup의 Transform
     public TMP_Text cntHeroes;
@@ -17,26 +16,6 @@ public class HeroBag : MonoBehaviour
 
     void Start()
     {
-        if (excelReader == null)
-        {
-            Debug.LogError("ExcelReader is not assigned.");
-            return;
-        }
-
-        if (heroPrefab == null)
-        {
-            Debug.LogError("Hero prefab is not assigned.");
-            return;
-        }
-
-        if (gridTransform == null)
-        {
-            Debug.LogError("GridTransform is not assigned.");
-            return;
-        }
-
-        heroes = excelReader.ReadExcel();
-        DisplayHeroes();
     }
 
     void Update() {
@@ -45,28 +24,6 @@ public class HeroBag : MonoBehaviour
 
     void DisplayHeroes()
     {
-        for (int i = displayedHeroes; i < heroes.Count; i++)
-        {
-            GameObject heroObject = Instantiate(heroPrefab, gridTransform);
-            Hero hero = heroes[i];
-            heroObject.transform.Find("NameText").GetComponent<TextMeshProUGUI>().text = hero.Name;
-            heroObject.transform.Find("LevelText").GetComponent<TextMeshProUGUI>().text = "Level " + hero.Level;
-            Sprite heroSprite = LoadSprite(hero.ImagePath);
-            displayedHeroes ++;
-            if (heroSprite != null)
-            {
-                heroObject.GetComponent<Image>().sprite = heroSprite;
-            }
-            else
-            {
-                Debug.LogError("Failed to load sprite for hero: " + hero.Name + " at path: " + hero.ImagePath);
-            }
-        }
-        UpdateHeroesCnt();
-        if (displayedHeroes > 25) {
-            AdjustGridLayoutGroup adjustGridLayoutGroup = gridTransform.GetComponent<AdjustGridLayoutGroup>();
-            adjustGridLayoutGroup.ModifyGrid(displayedHeroes / 6);
-        }
     }
 
     void DisplayMoreHeroes(int amount)
