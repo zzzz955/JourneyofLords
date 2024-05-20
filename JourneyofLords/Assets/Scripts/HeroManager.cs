@@ -1,14 +1,20 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class HeroManager : MonoBehaviour
 {
-    public HeroList heroList; // HeroList ScriptableObject를 참조
     public GameObject heroPrefab; // Hero 프리팹을 참조
     public Transform parentTransform; // 생성된 프리팹을 배치할 부모 트랜스폼
 
-    void Start()
+    private HeroList heroList;
+
+    public void Initialize(HeroList loadedHeroList)
     {
+        heroList = loadedHeroList;
+
+        var sortedHeroes = heroList.heroes.OrderByDescending(h => h.atk).ThenByDescending(h => h.growth).ToList();
+
         // 영웅 데이터를 불러와서 프리팹을 생성
         foreach (Hero hero in heroList.heroes)
         {
