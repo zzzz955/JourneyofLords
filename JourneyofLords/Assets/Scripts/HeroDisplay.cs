@@ -53,18 +53,14 @@ public class HeroDisplay : MonoBehaviour
 
     public void OnClick()
     {
-        Debug.Log("HeroItem clicked!"); // 디버깅 로그 추가
-
         // 팝업 생성 및 데이터 설정
         GameObject popup = Instantiate(popupHeroDicPrefab, transform.root); // 부모를 설정 (메인 캔버스 또는 루트)
         popup.transform.SetParent(transform.root, false); // 메인 캔버스의 자식으로 설정
-        Debug.Log("Popup instantiated!"); // 팝업 인스턴스화 확인 로그
         PopupHeroDisplay popupHeroDisplay = popup.GetComponent<PopupHeroDisplay>();
 
         if (popupHeroDisplay != null)
         {
             popupHeroDisplay.SetHeroData(currentHero);
-            Debug.Log("Popup data set!"); // 팝업 데이터 설정 확인 로그
         }
         else
         {

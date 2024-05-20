@@ -53,7 +53,8 @@ public class ExcelDataLoader : MonoBehaviour
                         hp = float.Parse(row[11].ToString()),
                         lead = float.Parse(row[12].ToString()),
                         spriteName = row[13].ToString(),
-                        equip = new List<string>(row[14].ToString().Split(';')) // Excel에서 아이템 목록을 ';'로 구분한 경우
+                        equip = new List<string>(row[14].ToString().Split(';')), // Excel에서 아이템 목록을 ';'로 구분한 경우
+                        description = row[15].ToString(),
                     };
 
                     heroes.Add(hero);
