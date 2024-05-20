@@ -6,6 +6,7 @@ public class HeroDisplay : MonoBehaviour
 {
     public Image spriteImage;
     public Image lvImage;
+    public Image gradeImage;
     public TMP_Text levelText;
 
     public void SetHeroData(Hero hero)
@@ -29,6 +30,16 @@ public class HeroDisplay : MonoBehaviour
         else
         {
             Debug.LogError("Failed to load sprite: " + hero.att);
+        }
+
+        Sprite sprite3 = Resources.Load<Sprite>(hero.grade.ToString());
+        if (sprite3 != null)
+        {
+            gradeImage.sprite = sprite3;
+        }
+        else
+        {
+            Debug.LogError("Failed to load sprite: " + hero.grade.ToString());
         }
 
         // 텍스트 필드 설정

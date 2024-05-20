@@ -16,7 +16,7 @@ public class HeroManager : MonoBehaviour
         var sortedHeroes = heroList.heroes.OrderByDescending(h => h.atk).ThenByDescending(h => h.growth).ToList();
 
         // 영웅 데이터를 불러와서 프리팹을 생성
-        foreach (Hero hero in heroList.heroes)
+        foreach (Hero hero in sortedHeroes)
         {
             CreateHeroPrefab(hero);
         }
