@@ -43,16 +43,17 @@ public class ExcelDataLoader : MonoBehaviour
                         grade = int.Parse(row[1].ToString()),
                         att = row[2].ToString(),
                         name = row[3].ToString(),
-                        level = int.Parse(row[4].ToString()),
-                        exp = int.Parse(row[5].ToString()),
-                        rebirth = int.Parse(row[6].ToString()),
-                        growth = int.Parse(row[7].ToString()),
-                        atk = float.Parse(row[8].ToString()),
-                        def = float.Parse(row[9].ToString()),
-                        hp = float.Parse(row[10].ToString()),
-                        lead = float.Parse(row[11].ToString()),
-                        spriteName = row[12].ToString(),
-                        equip = new List<string>(row[13].ToString().Split(';')) // Excel에서 아이템 목록을 ';'로 구분한 경우
+                        sex = row[4].ToString(),
+                        level = int.Parse(row[5].ToString()),
+                        exp = int.Parse(row[6].ToString()),
+                        rebirth = int.Parse(row[7].ToString()),
+                        growth = int.Parse(row[8].ToString()),
+                        atk = float.Parse(row[9].ToString()),
+                        def = float.Parse(row[10].ToString()),
+                        hp = float.Parse(row[11].ToString()),
+                        lead = float.Parse(row[12].ToString()),
+                        spriteName = row[13].ToString(),
+                        equip = new List<string>(row[14].ToString().Split(';')) // Excel에서 아이템 목록을 ';'로 구분한 경우
                     };
 
                     heroes.Add(hero);

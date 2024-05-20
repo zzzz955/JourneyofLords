@@ -6,6 +6,7 @@ public class HeroManager : MonoBehaviour
 {
     public GameObject heroPrefab; // Hero 프리팹을 참조
     public Transform parentTransform; // 생성된 프리팹을 배치할 부모 트랜스폼
+    public GameObject popupHeroDicPrefab;
 
     private HeroList heroList;
 
