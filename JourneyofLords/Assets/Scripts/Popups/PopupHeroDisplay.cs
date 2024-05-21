@@ -1,9 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
+
 
 public class PopupHeroDisplay : MonoBehaviour
 {
+    public GameObject panel;
     public Image spriteImage;
     public Image lvImage;
     public Image gradeImage;
@@ -19,6 +22,21 @@ public class PopupHeroDisplay : MonoBehaviour
     public TMP_Text etcText;
     public TMP_Text attMoreInfoText;
 
+    void Start () {
+        if (panel != null)
+        {
+            EventTrigger trigger = panel.GetComponent<EventTrigger>();
+            if (trigger == null)
+            {
+                trigger = panel.AddComponent<EventTrigger>();
+            }
+
+            EventTrigger.Entry entry = new EventTrigger.Entry();
+            entry.eventID = EventTriggerType.PointerClick;
+            entry.callback.AddListener((eventData) => { OnCloseButtonClick(); });
+            trigger.triggers.Add(entry);
+        }
+    }
 
     public void SetHeroData(Hero hero)
     {
@@ -77,8 +95,10 @@ public class PopupHeroDisplay : MonoBehaviour
         hpText.SetText("체력 : " + hero.hp);
         etcText.SetText(hero.description);
     }
-
-    public void Quit() {
+    
+    void OnCloseButtonClick()
+    {
+        // 팝업 닫기
         Destroy(gameObject);
     }
 }

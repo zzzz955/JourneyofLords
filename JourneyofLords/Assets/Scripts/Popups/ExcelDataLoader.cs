@@ -40,21 +40,23 @@ public class ExcelDataLoader : MonoBehaviour
                     Hero hero = new Hero
                     {
                         id = row[0].ToString(),
-                        grade = int.Parse(row[1].ToString()),
-                        att = row[2].ToString(),
-                        name = row[3].ToString(),
-                        sex = row[4].ToString(),
-                        level = int.Parse(row[5].ToString()),
-                        exp = int.Parse(row[6].ToString()),
-                        rebirth = int.Parse(row[7].ToString()),
-                        growth = int.Parse(row[8].ToString()),
-                        atk = float.Parse(row[9].ToString()),
-                        def = float.Parse(row[10].ToString()),
-                        hp = float.Parse(row[11].ToString()),
-                        lead = float.Parse(row[12].ToString()),
-                        spriteName = row[13].ToString(),
-                        equip = new List<string>(row[14].ToString().Split(';')), // Excel에서 아이템 목록을 ';'로 구분한 경우
-                        description = row[15].ToString(),
+                        index = int.Parse(row[1].ToString()),
+                        grade = int.Parse(row[2].ToString()),
+                        rarity = int.Parse(row[3].ToString()),
+                        att = row[4].ToString(),
+                        name = row[5].ToString(),
+                        sex = row[6].ToString(),
+                        level = int.Parse(row[7].ToString()),
+                        exp = int.Parse(row[8].ToString()),
+                        rebirth = int.Parse(row[9].ToString()),
+                        growth = int.Parse(row[10].ToString()),
+                        atk = float.Parse(row[11].ToString()),
+                        def = float.Parse(row[12].ToString()),
+                        hp = float.Parse(row[13].ToString()),
+                        lead = float.Parse(row[14].ToString()),
+                        spriteName = row[15].ToString(),
+                        equip = new List<string>(row[16].ToString().Split(';')), // Excel에서 아이템 목록을 ';'로 구분한 경우
+                        description = row[17].ToString(),
                     };
 
                     heroes.Add(hero);

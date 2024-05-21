@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UI_Heroes : MonoBehaviour
 {
-    public GameObject recruitHeroes;
-    public GameObject listHeroes;
+    public GameObject recruitHeroesUI;
+    public GameObject recruitResult;
+    public GameObject dicHeroesUI;
     public Button closeButton;
 
     private void Start()
@@ -22,15 +24,19 @@ public class UI_Heroes : MonoBehaviour
 
     // 영웅 모집
     public void RecruitActive() {
-        recruitHeroes.SetActive(true);
+        recruitHeroesUI.SetActive(true);
     }
 
     public void RecruitQuit() {
-        recruitHeroes.SetActive(false);
+        recruitHeroesUI.SetActive(false);
     }
 
-    public void Recruit1 () {
+    public void RecruitResultActive () {
+        recruitResult.SetActive(true);
+    }
 
+    public void RecruitResultQuit () {
+        recruitResult.SetActive(false);
     }
 
     public void Recruit2 () {
@@ -43,10 +49,10 @@ public class UI_Heroes : MonoBehaviour
 
     // 영웅 목록
     public void ListActive() {
-        listHeroes.SetActive(true);
+        dicHeroesUI.SetActive(true);
     }
 
     public void ListQuit() {
-        listHeroes.SetActive(false);
+        dicHeroesUI.SetActive(false);
     }
 }
