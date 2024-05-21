@@ -6,21 +6,33 @@ using ExcelDataReader;
 
 public class ExcelDataLoader : MonoBehaviour
 {
-    public string excelFilePath = "Scripts/GameData/HeroData.xlsx";
+    public string heroDataFilePath; // 영웅 정보 파일 경로
+    public string[] rateDataFilePaths; // 확률 정보 파일 경로
+
+    private HeroList heroList;
+    private List<List<HeroRate>> heroRatesList = new List<List<HeroRate>>();
 
     void Start()
     {
-        // Application.dataPath를 사용하여 절대 경로 생성
-        string absolutePath = Path.Combine(Application.dataPath, excelFilePath);
-        HeroList heroList = LoadExcelData(absolutePath);
+        string heroDataPath = Path.Combine(Application.dataPath, heroDataFilePath);
+        heroList = LoadHeroData(heroDataPath);
+
+        foreach (string rateDataFilePath in rateDataFilePaths)
+        {
+            string rateDataPath = Path.Combine(Application.dataPath, rateDataFilePath);
+            List<HeroRate> heroRates = LoadRateData(rateDataPath);
+            heroRatesList.Add(heroRates);
+        }
+
         HeroManager heroManager = FindObjectOfType<HeroManager>();
         if (heroManager != null)
         {
-            heroManager.Initialize(heroList);
+            heroManager.Initialize(heroList); // 모든 영웅 데이터를 초기화
+            heroManager.SetHeroRatesList(heroRatesList); // 각 파일의 확률 리스트를 설정
         }
     }
 
-    public static HeroList LoadExcelData(string excelFilePath)
+    public HeroList LoadHeroData(string excelFilePath)
     {
         List<Hero> heroes = new List<Hero>();
 
@@ -66,7 +78,43 @@ public class ExcelDataLoader : MonoBehaviour
 
         HeroList heroList = ScriptableObject.CreateInstance<HeroList>();
         heroList.heroes = heroes;
-
         return heroList;
     }
+
+    public List<HeroRate> LoadRateData(string excelFilePath)
+    {
+        List<HeroRate> heroRates = new List<HeroRate>();
+
+        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+        using (var stream = File.Open(excelFilePath, FileMode.Open, FileAccess.Read))
+        {
+            using (var reader = ExcelReaderFactory.CreateOpenXmlReader(stream))
+            {
+                var result = reader.AsDataSet();
+                var table = result.Tables[0];
+
+                for (int i = 1; i < table.Rows.Count; i++)
+                {
+                    var row = table.Rows[i];
+
+                    HeroRate heroRate = new HeroRate
+                    {
+                        index = int.Parse(row[0].ToString()),
+                        rate = float.Parse(row[1].ToString())
+                    };
+
+                    heroRates.Add(heroRate);
+                }
+            }
+        }
+
+        return heroRates;
+    }
+}
+
+public class HeroRate
+{
+    public int index;
+    public float rate;
 }

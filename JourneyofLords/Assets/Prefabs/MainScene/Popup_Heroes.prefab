@@ -441,7 +441,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -1169,7 +1169,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd00e1dd67fcdda4baf343e0aef85a0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  excelFilePath: Scripts/GameData/HeroData.xlsx
+  heroDataFilePath: Scripts/GameData/HeroData.xlsx
+  rateDataFilePaths:
+  - Scripts/GameData/HeroRecruit1.xlsx
+  - Scripts/GameData/HeroRecruit2.xlsx
+  - Scripts/GameData/HeroRecruit3.xlsx
 --- !u!114 &7078461699665871240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1183,6 +1187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heroPrefab: {fileID: 5987963689304983169, guid: 322b59360a94ec6429d856df3239e2a7, type: 3}
+  recruitHeroPrefab: {fileID: 5987963689304983169, guid: bbd623ece81e8ca439e732089d32679b, type: 3}
   parentTransform: {fileID: 9877869849130941}
   recruitResultTransform: {fileID: 1587875018003737946}
 --- !u!1 &2409463161172648113
@@ -1337,7 +1342,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 5
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -2105,7 +2110,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 10
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
