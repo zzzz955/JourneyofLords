@@ -632,8 +632,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -53.5}
-  m_SizeDelta: {x: 1050, y: 707}
+  m_AnchoredPosition: {x: 12.5, y: 0}
+  m_SizeDelta: {x: 1225, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6037159213658560262
 CanvasRenderer:
@@ -894,7 +894,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 150, y: 150}
+  m_CellSize: {x: 166, y: 166}
   m_Spacing: {x: 50, y: 50}
   m_Constraint: 1
   m_ConstraintCount: 6
@@ -1188,7 +1188,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   heroPrefab: {fileID: 5987963689304983169, guid: 322b59360a94ec6429d856df3239e2a7, type: 3}
   recruitHeroPrefab: {fileID: 5987963689304983169, guid: bbd623ece81e8ca439e732089d32679b, type: 3}
-  parentTransform: {fileID: 9877869849130941}
+  parentTransform: {fileID: 7393394018832798548}
+  parentTransformDic: {fileID: 9877869849130941}
   recruitResultTransform: {fileID: 1587875018003737946}
 --- !u!1 &2409463161172648113
 GameObject:
@@ -3257,7 +3258,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -17}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &806268375664131099
 CanvasRenderer:
