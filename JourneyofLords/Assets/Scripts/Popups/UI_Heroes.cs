@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class UI_Heroes : MonoBehaviour
 {
     public GameObject recruitHeroesUI;
-    public GameObject recruitResult;
     public GameObject dicHeroesUI;
     public Button closeButton;
 
@@ -31,13 +30,6 @@ public class UI_Heroes : MonoBehaviour
         recruitHeroesUI.SetActive(false);
     }
 
-    public void RecruitResultActive () {
-        recruitResult.SetActive(true);
-    }
-
-    public void RecruitResultQuit () {
-        recruitResult.SetActive(false);
-    }
 
     public void Recruit2 () {
         

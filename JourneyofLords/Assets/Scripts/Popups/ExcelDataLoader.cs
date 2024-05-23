@@ -6,9 +6,11 @@ using ExcelDataReader;
 
 public class ExcelDataLoader : MonoBehaviour
 {
+    public string userDataFilePath;
     public string heroDataFilePath; // 영웅 정보 파일 경로
     public string[] rateDataFilePaths; // 확률 정보 파일 경로
 
+    private List<User> users = new List<User>();
     private HeroList heroList;
     private List<List<HeroRate>> heroRatesList = new List<List<HeroRate>>();
 
@@ -30,6 +32,46 @@ public class ExcelDataLoader : MonoBehaviour
             heroManager.SetHeroList(heroList); // 모든 영웅 데이터를 초기화
             heroManager.SetHeroRatesList(heroRatesList); // 각 파일의 확률 리스트를 설정
         }
+    }
+
+    public static List<User> LoadUserData(string filePath)
+    {
+        List<User> users = new List<User>();
+
+        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+        using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+        {
+            using (var reader = ExcelReaderFactory.CreateReader(stream))
+            {
+                var result = reader.AsDataSet();
+                var dataTable = result.Tables[0];
+
+                for (int i = 1; i < dataTable.Rows.Count; i++) // Assuming the first row is the header
+                {
+                    var row = dataTable.Rows[i];
+                    User user = new User
+                    {
+                        email = row[0].ToString(),
+                        IGN = row[1].ToString(),
+                        gold = int.Parse(row[2].ToString()),
+                        userLV = int.Parse(row[3].ToString()),
+                        userEXP = int.Parse(row[4].ToString()),
+                        wood = int.Parse(row[5].ToString()),
+                        stone = int.Parse(row[6].ToString()),
+                        iron = int.Parse(row[7].ToString()),
+                        food = int.Parse(row[8].ToString()),
+                        max_Stage = int.Parse(row[9].ToString()),
+                        max_Rewards = int.Parse(row[10].ToString()),
+                        maxHeroes = int.Parse(row[11].ToString()),
+                        money = int.Parse(row[12].ToString()),
+                        troops = int.Parse(row[13].ToString())
+                    };
+                    users.Add(user);
+                }
+            }
+        }
+
+        return users;
     }
 
     public HeroList LoadHeroData(string excelFilePath)
@@ -112,8 +154,3 @@ public class ExcelDataLoader : MonoBehaviour
     }
 }
 
-public class HeroRate
-{
-    public int index;
-    public float rate;
-}
