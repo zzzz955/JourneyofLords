@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using ExcelDataReader;
 
 public class GameManager : Singleton<GameManager>
@@ -13,12 +14,31 @@ public class GameManager : Singleton<GameManager>
     public List<User> Users { get; private set; }
     public HeroList HeroList { get; private set; }
     public List<List<HeroRate>> HeroRatesList { get; private set; }
+    public User CurrentUser { get; private set; }
+    public MainUI MainUI { get; private set; }
 
     protected override void Awake()
     {
         base.Awake();
         DontDestroyOnLoad(gameObject);
         LoadAllData();
+    }
+
+    private void Start()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Main")
+        {
+            MainUI = FindObjectOfType<MainUI>();
+            if (MainUI != null && CurrentUser != null)
+            {
+                MainUI.UpdatePlayerStatus(CurrentUser);
+            }
+        }
     }
 
     private void LoadAllData()
@@ -34,6 +54,11 @@ public class GameManager : Singleton<GameManager>
             heroManager.SetHeroList(HeroList);
             heroManager.SetHeroRatesList(HeroRatesList);
         }
+    }
+
+    public void SetUserData(User userData)
+    {
+        CurrentUser = userData;
     }
 
     public static List<User> LoadUserData(string filePath)
@@ -187,5 +212,10 @@ public class GameManager : Singleton<GameManager>
         }
 
         return heroRatesList;
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
