@@ -27,7 +27,7 @@ public class ExcelDataLoader : MonoBehaviour
         HeroManager heroManager = FindObjectOfType<HeroManager>();
         if (heroManager != null)
         {
-            heroManager.Initialize(heroList, false); // 모든 영웅 데이터를 초기화
+            heroManager.SetHeroList(heroList); // 모든 영웅 데이터를 초기화
             heroManager.SetHeroRatesList(heroRatesList); // 각 파일의 확률 리스트를 설정
         }
     }

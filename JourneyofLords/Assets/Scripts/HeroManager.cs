@@ -29,14 +29,14 @@ public class HeroManager : MonoBehaviour
             Debug.LogError("FirestoreManager not found in the scene.");
         }
         LoadOwnedHeroes();
+        Initialize(heroList, false);
     }
 
-    public void Initialize(HeroList loadedHeroList, bool owned)
+    public void Initialize(HeroList list, bool owned)
     {
-        heroList = loadedHeroList;
         heroPrefabDictionary = new Dictionary<string, GameObject>();
 
-        var sortedHeroes = heroList.heroes.OrderByDescending(h => h.atk).ThenByDescending(h => h.growth).ThenByDescending(h => h.rarity).ThenByDescending(h => h.index).ToList();
+        var sortedHeroes = list.heroes.OrderByDescending(h => h.atk).ThenByDescending(h => h.growth).ThenByDescending(h => h.rarity).ThenByDescending(h => h.index).ToList();
 
         // 영웅 데이터를 불러와서 프리팹을 생성
         foreach (Hero hero in sortedHeroes)
@@ -52,6 +52,11 @@ public class HeroManager : MonoBehaviour
     public void SetHeroRatesList(List<List<HeroRate>> ratesList)
     {
         heroRatesList = ratesList;
+    }
+
+    public void SetHeroList(HeroList allHero)
+    {
+        heroList = allHero;
     }
 
     void CreateHeroPrefab(Hero hero, Transform parent, GameObject prefab)
@@ -74,7 +79,8 @@ public class HeroManager : MonoBehaviour
 
     public void RecruitHero(int tableIndex)
     {   
-        ClearRecruitResult();
+        ClearRecruitResult(recruitResultTransform);
+        ClearRecruitResult(parentTransform);
 
         int times = (tableIndex == 0 || tableIndex == 1) ? 1 : 10;
         
@@ -96,16 +102,17 @@ public class HeroManager : MonoBehaviour
 
                 CreateHeroPrefab(randomHero, recruitResultTransform, recruitHeroPrefab);
             }
-
-            // 보유 영웅 리스트에 추가하고 부모 트랜스폼에 노출
-            // ownedHeroes.Add(randomHero);
-            // CreateHeroPrefab(randomHero, parentTransform);
+            else
+            {
+                Debug.LogWarning("Failed to recruit hero. GetRandomHeroByRate returned null.");
+            }
         }
+        LoadOwnedHeroes();
     }
 
-    public void ClearRecruitResult()
+    public void ClearRecruitResult(Transform form)
     {
-        foreach (Transform child in recruitResultTransform)
+        foreach (Transform child in form)
         {
             Destroy(child.gameObject);
         }
@@ -113,14 +120,33 @@ public class HeroManager : MonoBehaviour
 
     Hero GetRandomHeroByRate(int fileIndex)
     {
-        if (heroRatesList == null || heroRatesList.Count <= fileIndex || heroRatesList[fileIndex].Count == 0)
+        if (heroRatesList == null)
         {
-            Debug.LogError("Hero rates list is empty or not initialized.");
+            Debug.LogError("Hero rates list is null.");
+            return null;
+        }
+
+        if (heroRatesList.Count <= fileIndex)
+        {
+            Debug.LogError($"Invalid file index: {fileIndex}. heroRatesList.Count: {heroRatesList.Count}");
+            return null;
+        }
+
+        if (heroRatesList[fileIndex].Count == 0)
+        {
+            Debug.LogError($"Hero rates list for the given index {fileIndex} is empty.");
             return null;
         }
 
         float totalRate = heroRatesList[fileIndex].Sum(hr => hr.rate);
+        if (totalRate <= 0)
+        {
+            Debug.LogError($"Total rate is zero or negative for index {fileIndex}. Total rate: {totalRate}");
+            return null;
+        }
+
         float randomPoint = Random.Range(0f, totalRate);
+        Debug.Log($"Random Point: {randomPoint} / Total Rate: {totalRate}");
 
         float currentRate = 0f;
         foreach (var heroRate in heroRatesList[fileIndex])
@@ -129,10 +155,21 @@ public class HeroManager : MonoBehaviour
             if (randomPoint < currentRate)
             {
                 int index = heroRate.index;
-                return heroList.heroes.FirstOrDefault(hero => hero.index == index);
+                Hero hero = heroList.heroes.FirstOrDefault(hero => hero.index == index);
+                if (hero != null)
+                {
+                    Debug.Log($"Selected Hero Index: {index}");
+                    return hero;
+                }
+                else
+                {
+                    Debug.LogError($"Hero not found for index: {index}. Make sure heroList contains heroes with all necessary indices.");
+                    return null;
+                }
             }
         }
 
+        Debug.LogError("Failed to select a hero based on rates.");
         return null;
     }
 
