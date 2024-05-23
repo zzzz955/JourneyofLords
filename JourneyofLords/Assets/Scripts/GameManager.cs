@@ -16,6 +16,7 @@ public class GameManager : Singleton<GameManager>
     public List<List<HeroRate>> HeroRatesList { get; private set; }
     public User CurrentUser { get; private set; }
     public MainUI MainUI { get; private set; }
+    public HeroManager HeroManager { get; private set; }
 
     protected override void Awake()
     {
@@ -41,19 +42,36 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    public void OnHeroesLoaded()
+    {
+        Debug.Log("OnHeroesLoaded called");
+
+        HeroManager heroManager = FindObjectOfType<HeroManager>();
+        if (heroManager != null)
+        {
+            if (CurrentUser != null)
+            {
+                Debug.Log("CurrentUser.maxHeroes: " + CurrentUser.maxHeroes);
+                heroManager.MaxInitialize(CurrentUser.maxHeroes);
+            }
+            else
+            {
+                Debug.LogError("CurrentUser is null in OnHeroesLoaded");
+            }
+            heroManager.SetHeroList(HeroList);
+            heroManager.SetHeroRatesList(HeroRatesList);
+        }
+        else
+        {
+            Debug.LogError("HeroManager is null in OnHeroesLoaded");
+        }
+    }
+
     private void LoadAllData()
     {
         Users = LoadUserData(userDataFilePath);
         HeroList = LoadHeroData(heroDataFilePath);
         HeroRatesList = LoadHeroRates(rateDataFilePaths);
-
-        // HeroManager에 데이터 설정 (필요한 경우)
-        HeroManager heroManager = FindObjectOfType<HeroManager>();
-        if (heroManager != null)
-        {
-            heroManager.SetHeroList(HeroList);
-            heroManager.SetHeroRatesList(HeroRatesList);
-        }
     }
 
     public void SetUserData(User userData)

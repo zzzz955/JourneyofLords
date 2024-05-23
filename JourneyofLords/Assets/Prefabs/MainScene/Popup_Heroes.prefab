@@ -1264,7 +1264,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7399906955705033166}
-  - component: {fileID: 7254746124851332874}
   - component: {fileID: 7078461699665871240}
   m_Layer: 5
   m_Name: HeroManager
@@ -1292,23 +1291,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &7254746124851332874
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2302559607765065782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd00e1dd67fcdda4baf343e0aef85a0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  heroDataFilePath: Scripts/GameData/HeroData.xlsx
-  rateDataFilePaths:
-  - Scripts/GameData/HeroRecruit1.xlsx
-  - Scripts/GameData/HeroRecruit2.xlsx
-  - Scripts/GameData/HeroRecruit3.xlsx
 --- !u!114 &7078461699665871240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1509,7 +1491,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -183, y: 5}
-  m_SizeDelta: {x: 250, y: 250}
+  m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8039512046552246529
 CanvasRenderer:
@@ -1539,7 +1521,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c1fee4cd845122446ba588b555dcc2a3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 010926367422c7b469fc4297d746e4ca, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

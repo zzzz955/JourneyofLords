@@ -21,7 +21,7 @@ public class HeroManager : MonoBehaviour
     private List<List<HeroRate>> heroRatesList;
     private List<Hero> ownedHeroes = new List<Hero>();
     private int currentHeroes;
-    private int maxHeroes = 12;
+    private int maxHeroes;
 
     private FirestoreManager firestoreManager;
     private Dictionary<string, GameObject> heroPrefabDictionary;
@@ -34,11 +34,24 @@ public class HeroManager : MonoBehaviour
             Debug.LogError("FirestoreManager not found in the scene.");
         }
         LoadOwnedHeroes();
-        Initialize(heroList, false);
+        GameManager.Instance.OnHeroesLoaded();
+        if (heroList != null)
+        {
+            Initialize(heroList, false);
+        }
+        else
+        {
+            Debug.LogError("HeroList is null in HeroManager.Start");
+        }
     }
 
     public void Initialize(HeroList list, bool owned)
     {
+        if (list == null)
+        {
+            Debug.LogError("HeroList is null in Initialize");
+            return;
+        }
         heroPrefabDictionary = new Dictionary<string, GameObject>();
 
         var sortedHeroes = list.heroes.OrderByDescending(h => h.atk).ThenByDescending(h => h.growth).ThenByDescending(h => h.rarity).ThenByDescending(h => h.index).ToList();
@@ -87,8 +100,9 @@ public class HeroManager : MonoBehaviour
         int times = (tableIndex == 0 || tableIndex == 1) ? 1 : 10;
         if (currentHeroes + times > maxHeroes) {
             // ExtendHeroesbagPopup 패널을 활성화하고 값을 설정
+            int needExtention = currentHeroes + times - maxHeroes;
             extendHeroesbagPopup.Initialize(this);
-            extendHeroesbagPopup.CheckVal(times);
+            extendHeroesbagPopup.CheckVal(needExtention);
             return;
         }
 
@@ -193,5 +207,12 @@ public class HeroManager : MonoBehaviour
     public void Maxpuls(int cnt) {
         maxHeroes += cnt;
         UpdateHeroesCnt();
+    }
+
+    public void MaxInitialize(int val) 
+    {
+        Debug.Log("MaxInitialize called with value: " + val);
+        maxHeroes = val;
+        Debug.Log("maxHeroes set to: " + maxHeroes);
     }
 }
