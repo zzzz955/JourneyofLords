@@ -253,4 +253,59 @@ public class FirestoreManager : MonoBehaviour
             }
         });
     }
+
+    public void UpdateUserData(User user, Action onSuccess = null, Action<string> onFailure = null)
+    {
+        if (auth.CurrentUser == null)
+        {
+            Debug.LogError("User is not authenticated");
+            onFailure?.Invoke("User is not authenticated");
+            return;
+        }
+
+        string userId = auth.CurrentUser.UserId;
+        DocumentReference userRef = firestore.Collection("users").Document(userId);
+
+        userRef.SetAsync(user).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompleted)
+            {
+                Debug.Log("User data updated successfully.");
+                onSuccess?.Invoke();
+            }
+            else
+            {
+                Debug.LogError("Error updating user data: " + task.Exception);
+                onFailure?.Invoke(task.Exception.Message);
+            }
+        });
+    }
+
+    public void GetUserData(string userId, Action<User> onSuccess, Action<string> onFailure)
+    {
+        DocumentReference userRef = firestore.Collection("users").Document(userId);
+
+        userRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompleted)
+            {
+                DocumentSnapshot snapshot = task.Result;
+                if (snapshot.Exists)
+                {
+                    User user = snapshot.ConvertTo<User>();
+                    onSuccess?.Invoke(user);
+                }
+                else
+                {
+                    Debug.LogError("User data not found.");
+                    onFailure?.Invoke("User data not found");
+                }
+            }
+            else
+            {
+                Debug.LogError("Error getting user data: " + task.Exception);
+                onFailure?.Invoke(task.Exception.Message);
+            }
+        });
+    }
 }

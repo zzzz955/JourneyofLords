@@ -1,9 +1,13 @@
-using System.Collections.Generic;
+using System;
+using System.Collections;
+using System.Collections.Generic; // Ensure this is included
 using System.Data;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using ExcelDataReader;
+using Firebase.Firestore;
+using Firebase.Extensions;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -18,10 +22,15 @@ public class GameManager : Singleton<GameManager>
     public MainUI MainUI { get; private set; }
     public HeroManager HeroManager { get; private set; }
 
+    private FirestoreManager firestoreManager;
+    private Coroutine energyRechargeCoroutine;
+    private int energyRechargeTime = 600; // 10분 = 600초
+
     protected override void Awake()
     {
         base.Awake();
         DontDestroyOnLoad(gameObject);
+        firestoreManager = FindObjectOfType<FirestoreManager>();
         LoadAllData();
     }
 
@@ -77,6 +86,61 @@ public class GameManager : Singleton<GameManager>
     public void SetUserData(User userData)
     {
         CurrentUser = userData;
+        StartEnergyRecharge();
+    }
+
+    private void StartEnergyRecharge()
+    {
+        if (energyRechargeCoroutine != null)
+        {
+            StopCoroutine(energyRechargeCoroutine);
+        }
+        energyRechargeCoroutine = StartCoroutine(RechargeEnergy());
+    }
+
+    private IEnumerator RechargeEnergy()
+    {
+        while (true)
+        {
+            UpdateEnergy();
+            yield return new WaitForSeconds(60); // 1분마다 체크
+        }
+    }
+
+    private void UpdateEnergy()
+    {
+        long currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        int maxEnergy = CurrentUser.userLV + 10;
+        int rechargeCount = (int)((currentTime - CurrentUser.lastEnergyUpdate) / energyRechargeTime);
+
+        if (rechargeCount > 0 && CurrentUser.energy < maxEnergy)
+        {
+            CurrentUser.energy = Mathf.Min(CurrentUser.energy + rechargeCount, maxEnergy);
+            CurrentUser.lastEnergyUpdate = currentTime;
+            SaveUserData();
+        }
+    }
+
+    public bool TryConsumeEnergy(int amount)
+    {
+        if (CurrentUser.energy >= amount)
+        {
+            CurrentUser.energy -= amount;
+            SaveUserData();
+            return true;
+        }
+        else
+        {
+            Debug.Log("Not enough energy.");
+            return false;
+        }
+    }
+
+    private void SaveUserData()
+    {
+        firestoreManager.UpdateUserData(CurrentUser, 
+            onSuccess: () => Debug.Log("User data updated successfully."),
+            onFailure: (error) => Debug.LogError("Error updating user data: " + error));
     }
 
     public static List<User> LoadUserData(string filePath)
@@ -119,6 +183,8 @@ public class GameManager : Singleton<GameManager>
                         maxHeroes = int.Parse(row[11].ToString()),
                         money = int.Parse(row[12].ToString()),
                         troops = int.Parse(row[13].ToString()),
+                        energy = 0, // 초기값 설정
+                        lastEnergyUpdate = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), // 초기값 설정
                         userID = null
                     };
                     users.Add(user);

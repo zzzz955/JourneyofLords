@@ -17,6 +17,7 @@ public class StageManager : MonoBehaviour
     private FirestoreManager firestoreManager;
     private FirebaseAuth auth;
     private string userId;
+    private GameManager gameManager;
 
     private void Start()
     {
@@ -34,6 +35,7 @@ public class StageManager : MonoBehaviour
         {
             Debug.LogError("User is not authenticated.");
         }
+        gameManager = GameManager.Instance;
     }
 
     private void LoadMaxStage()
