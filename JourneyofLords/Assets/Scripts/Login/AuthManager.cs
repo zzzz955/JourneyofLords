@@ -6,6 +6,7 @@ using Firebase.Extensions;
 using Firebase.Firestore;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
@@ -137,25 +138,40 @@ public class AuthManager : MonoBehaviour
         SceneManager.LoadScene("Main");
     }
 
-    public void ResetPassword(string email, Action<string> onSuccess, Action<string> onFailure)
+    public async void ResetPassword(string email, Action<string> onSuccess, Action<string> onFailure)
     {
-        auth.SendPasswordResetEmailAsync(email).ContinueWithOnMainThread(task =>
-        {
-            if (task.IsCanceled)
-            {
-                Debug.LogError("Password reset was canceled.");
-                onFailure?.Invoke("Password reset was canceled.");
-                return;
-            }
-            if (task.IsFaulted)
-            {
-                Debug.LogError("Password reset encountered an error: " + task.Exception);
-                onFailure?.Invoke("Error: " + task.Exception.Message);
-                return;
-            }
+        // Firestore에서 이메일 확인
+        CollectionReference usersRef = db.Collection("users");
+        Query query = usersRef.WhereEqualTo("email", email);
+        QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
 
-            Debug.Log("Password reset email sent successfully.");
-            onSuccess?.Invoke("Password reset email sent successfully.");
-        });
+        if (querySnapshot.Documents.Any()) // LINQ를 사용하여 Count 대신 Any를 사용합니다.
+        {
+            // 이메일이 존재하면 비밀번호 재설정 이메일 발송
+            await auth.SendPasswordResetEmailAsync(email).ContinueWithOnMainThread(task =>
+            {
+                if (task.IsCanceled)
+                {
+                    Debug.LogError("Password reset was canceled.");
+                    onFailure?.Invoke("비밀번호 찾기 취소.");
+                    return;
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.LogError("Password reset encountered an error: " + task.Exception);
+                    onFailure?.Invoke("에러: " + task.Exception.Message);
+                    return;
+                }
+
+                Debug.Log("Password reset email sent successfully.");
+                onSuccess?.Invoke("입력한 메일 주소로 메일이 발송되었습니다.");
+            });
+        }
+        else
+        {
+            // 이메일이 존재하지 않으면 실패 메시지 반환
+            Debug.LogError("Email not found in Firestore.");
+            onFailure?.Invoke("등록 되지 않은 이메일 입니다.");
+        }
     }
 }

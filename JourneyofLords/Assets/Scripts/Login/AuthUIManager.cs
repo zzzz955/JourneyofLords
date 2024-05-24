@@ -66,12 +66,12 @@ public class AuthUIManager : MonoBehaviour
 
     private void OnSignUpSuccess(string email)
     {
-        signupFeedbackText.SetText("Sign up successful! " + email);
+        signupFeedbackText.SetText("ID생성 성공! " + email);
     }
 
     private void OnSignUpFail(string error)
     {
-        signupFeedbackText.SetText("Sign up failed: " + error);
+        signupFeedbackText.SetText("ID생성 실패!: " + error);
     }
 
     public void OnLoginButtonClicked()
