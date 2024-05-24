@@ -207,6 +207,18 @@ public class HeroManager : MonoBehaviour
     public void Maxpuls(int cnt) {
         maxHeroes += cnt;
         UpdateHeroesCnt();
+        if (GameManager.Instance.CurrentUser != null)
+        {
+            FirestoreManager firestoreManager = FindObjectOfType<FirestoreManager>();
+            if (firestoreManager != null)
+            {
+                firestoreManager.UpdateUserMaxHeroes(GameManager.Instance.CurrentUser.userID, maxHeroes);
+            }
+            else
+            {
+                Debug.LogError("FirestoreManager not found in the scene.");
+            }
+        }
     }
 
     public void MaxInitialize(int val) 

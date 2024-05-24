@@ -118,7 +118,8 @@ public class GameManager : Singleton<GameManager>
                         max_Rewards = int.Parse(row[10].ToString()),
                         maxHeroes = int.Parse(row[11].ToString()),
                         money = int.Parse(row[12].ToString()),
-                        troops = int.Parse(row[13].ToString())
+                        troops = int.Parse(row[13].ToString()),
+                        userID = null
                     };
                     users.Add(user);
                 }
