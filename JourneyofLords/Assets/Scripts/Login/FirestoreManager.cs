@@ -6,6 +6,7 @@ using Firebase;
 using Firebase.Auth;
 using Firebase.Firestore;
 using Firebase.Extensions;
+using System.Threading.Tasks;
 
 public class FirestoreManager : MonoBehaviour
 {
@@ -80,58 +81,18 @@ public class FirestoreManager : MonoBehaviour
         });
     }
 
-    public void UpdateHero(Hero updatedHero)
+    public async Task<HeroList> GetHeroesData()
     {
         if (auth.CurrentUser == null)
         {
             Debug.LogError("User is not authenticated");
-            return;
+            return null;
         }
 
         string userId = auth.CurrentUser.UserId;
-        DocumentReference heroRef = firestore.Collection("users").Document(userId).Collection("heroes").Document(updatedHero.id);
-
-        Dictionary<string, object> heroData = new Dictionary<string, object>
+        try
         {
-            { "level", updatedHero.level },
-            { "atk", updatedHero.atk },
-            { "def", updatedHero.def },
-            { "hp", updatedHero.hp }
-            // 필요한 경우 다른 속성들도 업데이트
-        };
-
-        heroRef.UpdateAsync(heroData).ContinueWithOnMainThread(task =>
-        {
-            if (task.IsCompleted)
-            {
-                Debug.Log("Hero updated in Firestore successfully.");
-            }
-            else if (task.IsFaulted)
-            {
-                Debug.LogError("Failed to update hero in Firestore: " + task.Exception);
-            }
-        });
-    }
-
-
-    public void GetHeroesData()
-    {
-        if (auth.CurrentUser == null)
-        {
-            Debug.LogError("User is not authenticated");
-            return;
-        }
-
-        string userId = auth.CurrentUser.UserId;
-        firestore.Collection("users").Document(userId).Collection("heroes").GetSnapshotAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted)
-            {
-                Debug.LogError("Error getting heroes data: " + task.Exception);
-                return;
-            }
-
-            QuerySnapshot snapshot = task.Result;
+            QuerySnapshot snapshot = await firestore.Collection("users").Document(userId).Collection("heroes").GetSnapshotAsync();
 
             List<Hero> heroes = new List<Hero>();
             foreach (DocumentSnapshot heroDocument in snapshot.Documents)
@@ -149,15 +110,14 @@ public class FirestoreManager : MonoBehaviour
 
             HeroList heroList = ScriptableObject.CreateInstance<HeroList>();
             heroList.heroes = heroes;
-            Debug.Log(heroList.heroes.Count);
 
-            // 데이터를 불러온 후 바로 HeroManager의 Initialize 메서드를 호출합니다.
-
-            HeroManager heroManager = FindObjectOfType<HeroManager>();
-            if (heroManager != null) {
-                heroManager.Initialize(heroList, true);
-            }
-        });
+            return heroList;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error getting heroes data: " + e.Message);
+            return null;
+        }
     }
 
     public void UpdateUserMaxHeroes(string userId, int newMaxHeroes)

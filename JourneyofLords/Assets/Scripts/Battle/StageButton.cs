@@ -1,10 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
+
 
 public class StageButton : MonoBehaviour
 {
     public TMP_Text stageText;
+
+
     private int stageNumber;
     private bool isUnlocked;
     private StageManager stageManager;
@@ -14,19 +18,11 @@ public class StageButton : MonoBehaviour
         stageNumber = stage;
         isUnlocked = unlocked;
         stageText.SetText(stage.ToString());
-        GetComponent<Button>().interactable = unlocked;
-
-        if (unlocked)
-        {
-            GetComponent<Button>().onClick.AddListener(OnClick);
-        }
     }
 
-    private void OnClick()
+    public void Clicked()
     {
-        Debug.Log("Stage " + stageNumber + " clicked!");
-        // 여기에 스테이지 시작 로직 추가
-        stageManager = FindObjectOfType<StageManager>();
-        stageManager.StageCleared(stageNumber);
+        StageManager stageManager = FindObjectOfType<StageManager>();
+        if (stageManager != null) {stageManager.ShowBattleReadyUI();}
     }
 }

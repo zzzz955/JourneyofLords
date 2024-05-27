@@ -165,31 +165,10 @@ public class HeroManager : MonoBehaviour
         return null;
     }
 
-    void LoadOwnedHeroes()
+    async void LoadOwnedHeroes()
     {
-        firestoreManager.GetHeroesData();
-    }
-
-    public void UpdateHero(Hero updatedHero)
-    {
-        firestoreManager.UpdateHero(updatedHero);
-        Hero hero = heroList.heroes.FirstOrDefault(h => h.id == updatedHero.id);
-        if (hero != null)
-        {
-            hero.level = updatedHero.level;
-            hero.atk = updatedHero.atk;
-            hero.def = updatedHero.def;
-            hero.hp = updatedHero.hp;
-
-            if (heroPrefabDictionary.TryGetValue(updatedHero.id, out GameObject heroObject))
-            {
-                HeroDisplay heroDisplay = heroObject.GetComponent<HeroDisplay>();
-                if (heroDisplay != null)
-                {
-                    heroDisplay.SetHeroData(hero);
-                }
-            }
-        }
+        HeroList lst = await firestoreManager.GetHeroesData();
+        Initialize(lst, true);
     }
 
     public void RecruitResultActive () {

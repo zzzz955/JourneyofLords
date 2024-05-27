@@ -199,4 +199,8 @@ public class GameManager : Singleton<GameManager>
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+
+    public void GetEnergyInfo() {
+        
+    }
 }

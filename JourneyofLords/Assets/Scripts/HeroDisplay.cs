@@ -9,6 +9,10 @@ public class HeroDisplay : MonoBehaviour
     public Image lvImage;
     public Image gradeImage;
     public TMP_Text levelText;
+    public TMP_Text heroName;
+    public TMP_Text heroATK;
+    public TMP_Text heroDEF;
+    public TMP_Text heroTroops;
     public GameObject popupHeroDicPrefab;
     private Hero currentHero;
 
@@ -18,37 +22,20 @@ public class HeroDisplay : MonoBehaviour
 
         // 스프라이트 설정
         Sprite sprite1 = Resources.Load<Sprite>(hero.spriteName);
-        if (sprite1 != null)
-        {
-            spriteImage.sprite = sprite1;
-        }
-        else
-        {
-            Debug.LogError("Failed to load sprite: " + hero.spriteName);
-        }
+        if (sprite1 != null) {spriteImage.sprite = sprite1;}
 
         Sprite sprite2 = Resources.Load<Sprite>(hero.att);
-        if (sprite2 != null)
-        {
-            lvImage.sprite = sprite2;
-        }
-        else
-        {
-            Debug.LogError("Failed to load sprite: " + hero.att);
-        }
+        if (sprite2 != null) {lvImage.sprite = sprite2;}
 
         Sprite sprite3 = Resources.Load<Sprite>(hero.grade.ToString());
-        if (sprite3 != null)
-        {
-            gradeImage.sprite = sprite3;
-        }
-        else
-        {
-            Debug.LogError("Failed to load sprite: " + hero.grade.ToString());
-        }
+        if (sprite3 != null) {gradeImage.sprite = sprite3;}
 
         // 텍스트 필드 설정
-        levelText.SetText(hero.level.ToString());
+        if (levelText != null) {levelText.SetText(hero.level.ToString());}
+        if (heroName != null) {heroName.SetText(hero.name);}
+        if (heroATK != null) {heroATK.SetText(hero.atk.ToString());}
+        if (heroDEF != null) {heroDEF.SetText(hero.def.ToString());}
+        if (heroTroops != null) {heroTroops.SetText(hero.lead.ToString());}
     }
 
     public void OnClick()

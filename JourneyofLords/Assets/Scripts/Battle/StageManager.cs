@@ -10,6 +10,8 @@ public class StageManager : MonoBehaviour
     public Button nextButton; // 다음 페이지 버튼
     public Button prevButton; // 이전 페이지 버튼
     public TMP_Text energyInfo;
+    public Transform parentTransform;
+    public GameObject battleReadyUI;
 
     private int currentPage = 0;
     private int stagesPerPage = 10;
@@ -93,5 +95,22 @@ public class StageManager : MonoBehaviour
     {
         currentPage--;
         UpdateButtons();
+    }
+
+    public void UpdateEnergyText(int cur, int max) {
+        energyInfo.SetText(cur + "/" + max);
+    }
+
+    public void ShowBattleReadyUI() {
+        Debug.Log("ShowBattleReadyUI called");
+        if (battleReadyUI != null)
+        {
+            GameObject instance = Instantiate(battleReadyUI, parentTransform);
+            Debug.Log("BattleReadyUI instantiated: " + instance.name);
+        }
+        else
+        {
+            Debug.LogError("battleReadyUI prefab is not assigned.");
+        }
     }
 }

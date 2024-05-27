@@ -1363,7 +1363,9 @@ MonoBehaviour:
   buttonContainer: {fileID: 1029061141}
   nextButton: {fileID: 1609514850}
   prevButton: {fileID: 1979269480}
-  energyInfo: {fileID: 0}
+  energyInfo: {fileID: 1826188816}
+  parentTransform: {fileID: 264185623}
+  battleReadyUI: {fileID: 3042313187052476900, guid: 6260073f3f82c674e8d115ec3e478393, type: 3}
 --- !u!4 &1899107337
 Transform:
   m_ObjectHideFlags: 0
