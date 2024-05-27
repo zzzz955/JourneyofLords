@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Firebase.Auth;
+using TMPro;
 
 public class StageManager : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class StageManager : MonoBehaviour
     public Transform buttonContainer; // 버튼들이 배치될 부모 오브젝트
     public Button nextButton; // 다음 페이지 버튼
     public Button prevButton; // 이전 페이지 버튼
+    public TMP_Text energyInfo;
 
     private int currentPage = 0;
     private int stagesPerPage = 10;

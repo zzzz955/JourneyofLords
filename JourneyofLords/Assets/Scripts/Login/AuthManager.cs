@@ -46,39 +46,27 @@ public class AuthManager : MonoBehaviour
 
     private async Task SaveUserDataToFirestore(FirebaseUser newUser)
     {
-        string userDataPath = Path.Combine(Application.dataPath, "Scripts/GameData/UserData.xlsx");
-        userDataPath = userDataPath.Replace("\\", "/");
-        Debug.Log("Saving user data to path: " + userDataPath);
-
         try
         {
-            List<User> users = GameManager.LoadUserData(userDataPath);
-            if (users == null || users.Count == 0)
-            {
-                Debug.LogError("Failed to load user data.");
-                return;
-            }
-
-            string ign = "u" + DateTime.Now.ToString("yyMMddHHmmssFFFFFFF");
-
-            User defaultUser = users[0];
             User newUserEntry = new User
             {
                 email = newUser.Email,
-                IGN = ign,
-                gold = defaultUser.gold,
-                userLV = defaultUser.userLV,
-                userEXP = defaultUser.userEXP,
-                wood = defaultUser.wood,
-                stone = defaultUser.stone,
-                iron = defaultUser.iron,
-                food = defaultUser.food,
-                max_Stage = defaultUser.max_Stage,
-                max_Rewards = defaultUser.max_Rewards,
-                maxHeroes = defaultUser.maxHeroes,
-                money = defaultUser.money,
-                troops = defaultUser.troops,
-                userID = newUser.UserId
+                IGN = "u" + DateTime.Now.ToString("yyMMddHHmmssFFFFFFF"),
+                gold = 10,
+                userLV = 1,
+                userEXP = 0,
+                wood = 10000,
+                stone = 10000,
+                iron = 10000,
+                food = 10000,
+                max_Stage = 0,
+                max_Rewards = 0,
+                maxHeroes = 12,
+                money = 2000,
+                troops = 1000,
+                userID = newUser.UserId,
+                energy = 11,
+                maxEnergy = 11
             };
 
             DocumentReference userRef = db.Collection("users").Document(newUser.UserId);

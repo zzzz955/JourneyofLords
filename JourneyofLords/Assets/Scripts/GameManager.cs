@@ -11,7 +11,6 @@ using Firebase.Extensions;
 
 public class GameManager : Singleton<GameManager>
 {
-    public string userDataFilePath = "Scripts/GameData/UserData.xlsx"; // 상대 경로로 설정
     public string heroDataFilePath = "Scripts/GameData/HeroData.xlsx"; // 상대 경로로 설정
     public string[] rateDataFilePaths = { "Scripts/GameData/HeroRecruit1.xlsx", "Scripts/GameData/HeroRecruit2.xlsx", "Scripts/GameData/HeroRecruit3.xlsx" }; // 상대 경로로 설정
 
@@ -23,8 +22,6 @@ public class GameManager : Singleton<GameManager>
     public HeroManager HeroManager { get; private set; }
 
     private FirestoreManager firestoreManager;
-    private Coroutine energyRechargeCoroutine;
-    private int energyRechargeTime = 600; // 10분 = 600초
 
     protected override void Awake()
     {
@@ -78,7 +75,6 @@ public class GameManager : Singleton<GameManager>
 
     private void LoadAllData()
     {
-        Users = LoadUserData(userDataFilePath);
         HeroList = LoadHeroData(heroDataFilePath);
         HeroRatesList = LoadHeroRates(rateDataFilePaths);
     }
@@ -86,54 +82,6 @@ public class GameManager : Singleton<GameManager>
     public void SetUserData(User userData)
     {
         CurrentUser = userData;
-        StartEnergyRecharge();
-    }
-
-    private void StartEnergyRecharge()
-    {
-        if (energyRechargeCoroutine != null)
-        {
-            StopCoroutine(energyRechargeCoroutine);
-        }
-        energyRechargeCoroutine = StartCoroutine(RechargeEnergy());
-    }
-
-    private IEnumerator RechargeEnergy()
-    {
-        while (true)
-        {
-            UpdateEnergy();
-            yield return new WaitForSeconds(60); // 1분마다 체크
-        }
-    }
-
-    private void UpdateEnergy()
-    {
-        long currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        int maxEnergy = CurrentUser.userLV + 10;
-        int rechargeCount = (int)((currentTime - CurrentUser.lastEnergyUpdate) / energyRechargeTime);
-
-        if (rechargeCount > 0 && CurrentUser.energy < maxEnergy)
-        {
-            CurrentUser.energy = Mathf.Min(CurrentUser.energy + rechargeCount, maxEnergy);
-            CurrentUser.lastEnergyUpdate = currentTime;
-            SaveUserData();
-        }
-    }
-
-    public bool TryConsumeEnergy(int amount)
-    {
-        if (CurrentUser.energy >= amount)
-        {
-            CurrentUser.energy -= amount;
-            SaveUserData();
-            return true;
-        }
-        else
-        {
-            Debug.Log("Not enough energy.");
-            return false;
-        }
     }
 
     private void SaveUserData()
@@ -141,58 +89,6 @@ public class GameManager : Singleton<GameManager>
         firestoreManager.UpdateUserData(CurrentUser, 
             onSuccess: () => Debug.Log("User data updated successfully."),
             onFailure: (error) => Debug.LogError("Error updating user data: " + error));
-    }
-
-    public static List<User> LoadUserData(string filePath)
-    {
-        string userDataPath = Path.Combine(Application.dataPath, filePath);
-        userDataPath = userDataPath.Replace("\\", "/");
-        Debug.Log("User data path: " + userDataPath);
-
-        if (!File.Exists(userDataPath))
-        {
-            Debug.LogError("User data file not found: " + userDataPath);
-            return null;
-        }
-
-        List<User> users = new List<User>();
-        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-        using (var stream = File.Open(userDataPath, FileMode.Open, FileAccess.Read))
-        {
-            using (var reader = ExcelReaderFactory.CreateReader(stream))
-            {
-                var result = reader.AsDataSet();
-                var dataTable = result.Tables[0];
-
-                for (int i = 1; i < dataTable.Rows.Count; i++)
-                {
-                    var row = dataTable.Rows[i];
-                    User user = new User
-                    {
-                        email = row[0].ToString(),
-                        IGN = row[1].ToString(),
-                        gold = int.Parse(row[2].ToString()),
-                        userLV = int.Parse(row[3].ToString()),
-                        userEXP = int.Parse(row[4].ToString()),
-                        wood = int.Parse(row[5].ToString()),
-                        stone = int.Parse(row[6].ToString()),
-                        iron = int.Parse(row[7].ToString()),
-                        food = int.Parse(row[8].ToString()),
-                        max_Stage = int.Parse(row[9].ToString()),
-                        max_Rewards = int.Parse(row[10].ToString()),
-                        maxHeroes = int.Parse(row[11].ToString()),
-                        money = int.Parse(row[12].ToString()),
-                        troops = int.Parse(row[13].ToString()),
-                        energy = 0, // 초기값 설정
-                        lastEnergyUpdate = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), // 초기값 설정
-                        userID = null
-                    };
-                    users.Add(user);
-                }
-            }
-        }
-
-        return users;
     }
 
     public static HeroList LoadHeroData(string filePath)
