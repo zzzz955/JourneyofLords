@@ -9,8 +9,11 @@ public class BattleReadyUI : MonoBehaviour
     public GameObject placeHeroUI;
     public Transform parentTransform;
     public GameObject heroPrefab;
+    public GameObject allyPrefab;
+    public Transform allyGridParent; // 아군 GridLayout의 부모 오브젝트
 
     private Dictionary<string, GameObject> heroPrefabDictionary;
+    private List<Hero> selectedHeroes = new List<Hero>(); // 선택된 영웅 리스트
     private FirestoreManager firestoreManager;
 
     void Start() {
@@ -29,6 +32,7 @@ public class BattleReadyUI : MonoBehaviour
         HeroList lst = await firestoreManager.GetHeroesData();
         Initialize(lst);
         placeHeroUI.SetActive(true);
+        selectedHeroes.Clear();
     }
 
     public void QuitPlaceHeroUI() {
@@ -60,6 +64,7 @@ public class BattleReadyUI : MonoBehaviour
         if (heroDisplay != null)
         {
             heroDisplay.SetHeroData(hero);
+            heroDisplay.OnToggleChanged = OnHeroToggleChanged; // Toggle 변경 콜백 설정
             heroPrefabDictionary[hero.id] = heroObject;
         }
         else
@@ -73,6 +78,42 @@ public class BattleReadyUI : MonoBehaviour
         foreach (Transform child in form)
         {
             Destroy(child.gameObject);
+        }
+    }
+
+    private void OnHeroToggleChanged(Hero hero, bool isOn)
+    {
+        if (isOn)
+        {
+            selectedHeroes.Add(hero);
+        }
+        else
+        {
+            selectedHeroes.Remove(hero);
+        }
+    }
+
+    public void PlaceAllies()
+    {
+        // 아군 GridLayout 초기화
+        foreach (Transform child in allyGridParent)
+        {
+            Destroy(child.gameObject);
+        }
+        DoPlace(selectedHeroes);
+        QuitPlaceHeroUI();
+        // 선택된 영웅들을 아군 GridLayout에 배치
+    }
+
+    public void DoPlace(List<Hero> selected) {
+        foreach (var hero in selected)
+        {
+            GameObject allyObject = Instantiate(allyPrefab, allyGridParent);
+            HeroDisplay heroDisplay = allyObject.GetComponent<HeroDisplay>();
+            if (heroDisplay != null)
+            {
+                heroDisplay.SetHeroData(hero);
+            }
         }
     }
 }

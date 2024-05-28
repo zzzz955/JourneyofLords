@@ -8,9 +8,9 @@ public class StageButton : MonoBehaviour
 {
     public TMP_Text stageText;
 
-
     private int stageNumber;
     private bool isUnlocked;
+    private List<Hero> selectedHeroes = new List<Hero>();
 
     public void Setup(int stage, bool unlocked)
     {

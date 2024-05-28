@@ -14,21 +14,30 @@ public class HeroDisplay : MonoBehaviour
     public TMP_Text heroDEF;
     public TMP_Text heroTroops;
     public GameObject popupHeroDicPrefab;
+    public Toggle selectToggle; // 체크박스 추가
+
     private Hero currentHero;
+    public System.Action<Hero, bool> OnToggleChanged; // 체크박스 변경 콜백
 
     public void SetHeroData(Hero hero)
     {
         currentHero = hero;
 
         // 스프라이트 설정
-        Sprite sprite1 = Resources.Load<Sprite>(hero.spriteName);
-        if (sprite1 != null) {spriteImage.sprite = sprite1;}
+        if (spriteImage != null) {
+            Sprite sprite1 = Resources.Load<Sprite>(hero.spriteName);
+            if (sprite1 != null) {spriteImage.sprite = sprite1;}
+        }
 
-        Sprite sprite2 = Resources.Load<Sprite>(hero.att);
-        if (sprite2 != null) {lvImage.sprite = sprite2;}
+        if (lvImage != null) {
+            Sprite sprite2 = Resources.Load<Sprite>(hero.att);
+            if (sprite2 != null) {lvImage.sprite = sprite2;}
+        }
 
-        Sprite sprite3 = Resources.Load<Sprite>(hero.grade.ToString());
-        if (sprite3 != null) {gradeImage.sprite = sprite3;}
+        if (gradeImage != null) {
+            Sprite sprite3 = Resources.Load<Sprite>(hero.grade.ToString());
+            if (sprite3 != null) {gradeImage.sprite = sprite3;}
+        }
 
         // 텍스트 필드 설정
         if (levelText != null) {levelText.SetText(hero.level.ToString());}
@@ -36,6 +45,9 @@ public class HeroDisplay : MonoBehaviour
         if (heroATK != null) {heroATK.SetText(hero.atk.ToString());}
         if (heroDEF != null) {heroDEF.SetText(hero.def.ToString());}
         if (heroTroops != null) {heroTroops.SetText(hero.lead.ToString());}
+
+        // 체크박스 설정
+        if (selectToggle != null) {selectToggle.onValueChanged.AddListener(OnToggleValueChanged);}
     }
 
     public void OnClick()
@@ -53,5 +65,10 @@ public class HeroDisplay : MonoBehaviour
         {
             Debug.LogError("PopupHeroDisplay component not found on popup.");
         }
+    }
+
+    private void OnToggleValueChanged(bool isOn)
+    {
+        OnToggleChanged?.Invoke(currentHero, isOn);
     }
 }
