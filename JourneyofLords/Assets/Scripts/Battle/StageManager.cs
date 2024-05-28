@@ -113,4 +113,33 @@ public class StageManager : MonoBehaviour
             Debug.LogError("battleReadyUI prefab is not assigned.");
         }
     }
+
+    public void LoadStage(int stageLevel)
+    {
+        Debug.Log("LoadStage called for stage: " + stageLevel);
+        Debug.Log("Total stages loaded: " + gameManager.StageDataList.Count);
+        foreach (var stageData in gameManager.StageDataList)
+        {
+            Debug.Log("Loaded stage level: " + stageData.level);
+        }
+        
+        StageData selectedStage = gameManager.StageDataList.Find(s => s.level == stageLevel);
+        if (selectedStage != null)
+        {
+            Debug.Log($"Stage found for level {stageLevel} with {selectedStage.enemies.Count} enemies.");
+            EnemyPlacer enemyPlacer = FindObjectOfType<EnemyPlacer>();
+            if (enemyPlacer != null)
+            {
+                enemyPlacer.PlaceEnemies(selectedStage.enemies);
+            }
+            else
+            {
+                Debug.LogError("EnemyPlacer not found in the scene.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Stage data not found for stage level: " + stageLevel);
+        }
+    }
 }

@@ -11,7 +11,6 @@ public class StageButton : MonoBehaviour
 
     private int stageNumber;
     private bool isUnlocked;
-    private StageManager stageManager;
 
     public void Setup(int stage, bool unlocked)
     {
@@ -24,5 +23,6 @@ public class StageButton : MonoBehaviour
     {
         StageManager stageManager = FindObjectOfType<StageManager>();
         if (stageManager != null) {stageManager.ShowBattleReadyUI();}
+        if (stageManager != null) {stageManager.LoadStage(stageNumber);}
     }
 }

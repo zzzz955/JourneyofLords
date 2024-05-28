@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using System.Data;
+using System;
 using System.IO;
 using UnityEngine;
 using ExcelDataReader;
 
 public class ExcelDataLoader : MonoBehaviour
 {
-    public string userDataFilePath;
     public string heroDataFilePath; // 영웅 정보 파일 경로
     public string[] rateDataFilePaths; // 확률 정보 파일 경로
 
@@ -34,55 +33,14 @@ public class ExcelDataLoader : MonoBehaviour
         }
     }
 
-    public static List<User> LoadUserData(string filePath)
-    {
-        List<User> users = new List<User>();
-
-        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-        using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
-        {
-            using (var reader = ExcelReaderFactory.CreateReader(stream))
-            {
-                var result = reader.AsDataSet();
-                var dataTable = result.Tables[0];
-
-                for (int i = 1; i < dataTable.Rows.Count; i++) // Assuming the first row is the header
-                {
-                    var row = dataTable.Rows[i];
-                    User user = new User
-                    {
-                        email = row[0].ToString(),
-                        IGN = row[1].ToString(),
-                        gold = int.Parse(row[2].ToString()),
-                        userLV = int.Parse(row[3].ToString()),
-                        userEXP = int.Parse(row[4].ToString()),
-                        wood = int.Parse(row[5].ToString()),
-                        stone = int.Parse(row[6].ToString()),
-                        iron = int.Parse(row[7].ToString()),
-                        food = int.Parse(row[8].ToString()),
-                        max_Stage = int.Parse(row[9].ToString()),
-                        max_Rewards = int.Parse(row[10].ToString()),
-                        maxHeroes = int.Parse(row[11].ToString()),
-                        money = int.Parse(row[12].ToString()),
-                        troops = int.Parse(row[13].ToString())
-                    };
-                    users.Add(user);
-                }
-            }
-        }
-
-        return users;
-    }
-
     public HeroList LoadHeroData(string excelFilePath)
     {
         List<Hero> heroes = new List<Hero>();
-
         System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
         using (var stream = File.Open(excelFilePath, FileMode.Open, FileAccess.Read))
         {
-            using (var reader = ExcelReaderFactory.CreateOpenXmlReader(stream))
+            using (var reader = ExcelReaderFactory.CreateReader(stream))
             {
                 var result = reader.AsDataSet();
                 var table = result.Tables[0];
@@ -90,7 +48,6 @@ public class ExcelDataLoader : MonoBehaviour
                 for (int i = 1; i < table.Rows.Count; i++)
                 {
                     var row = table.Rows[i];
-
                     Hero hero = new Hero
                     {
                         id = row[0].ToString(),
@@ -109,10 +66,9 @@ public class ExcelDataLoader : MonoBehaviour
                         hp = float.Parse(row[13].ToString()),
                         lead = float.Parse(row[14].ToString()),
                         spriteName = row[15].ToString(),
-                        equip = new List<string>(row[16].ToString().Split(';')), // Excel에서 아이템 목록을 ';'로 구분한 경우
+                        equip = new List<string>(row[16].ToString().Split(';')),
                         description = row[17].ToString(),
                     };
-
                     heroes.Add(hero);
                 }
             }
@@ -125,12 +81,40 @@ public class ExcelDataLoader : MonoBehaviour
     public List<HeroRate> LoadRateData(string excelFilePath)
     {
         List<HeroRate> heroRates = new List<HeroRate>();
+        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+        using (var stream = File.Open(excelFilePath, FileMode.Open, FileAccess.Read))
+        {
+            using (var reader = ExcelReaderFactory.CreateReader(stream))
+            {
+                var result = reader.AsDataSet();
+                var table = result.Tables[0];
+
+                for (int i = 1; i < table.Rows.Count; i++)
+                {
+                    var row = table.Rows[i];
+                    HeroRate heroRate = new HeroRate
+                    {
+                        index = int.Parse(row[0].ToString()),
+                        rate = float.Parse(row[1].ToString())
+                    };
+                    heroRates.Add(heroRate);
+                }
+            }
+        }
+        return heroRates;
+    }
+
+    public List<StageData> LoadStageData(string excelFilePath)
+    {
+        List<StageData> stages = new List<StageData>();
+        Dictionary<int, StageData> stageDictionary = new Dictionary<int, StageData>();
 
         System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
         using (var stream = File.Open(excelFilePath, FileMode.Open, FileAccess.Read))
         {
-            using (var reader = ExcelReaderFactory.CreateOpenXmlReader(stream))
+            using (var reader = ExcelReaderFactory.CreateReader(stream))
             {
                 var result = reader.AsDataSet();
                 var table = result.Tables[0];
@@ -139,18 +123,86 @@ public class ExcelDataLoader : MonoBehaviour
                 {
                     var row = table.Rows[i];
 
-                    HeroRate heroRate = new HeroRate
+                    try
                     {
-                        index = int.Parse(row[0].ToString()),
-                        rate = float.Parse(row[1].ToString())
-                    };
+                        int stageLevel = int.Parse(row[0].ToString());
+                        int enemyIndex = int.Parse(row[1].ToString());
+                        int enemyPos = int.Parse(row[2].ToString());
+                        Vector2Int position = ConvertToGridPosition(enemyPos);
+                        int heroIndex = int.Parse(row[3].ToString());
+                        int enemyLevel = int.Parse(row[4].ToString());
+                        float atk = float.Parse(row[5].ToString());
+                        float def = float.Parse(row[6].ToString());
+                        float hp = float.Parse(row[7].ToString());
+                        float lead = float.Parse(row[8].ToString());
 
-                    heroRates.Add(heroRate);
+                        Debug.Log($"Stage: {stageLevel}, EnemyIndex: {enemyIndex}, Position: {position}, HeroIndex: {heroIndex}");
+
+                        Hero baseHero = GameManager.Instance.HeroList.heroes.Find(hero => hero.index == heroIndex);
+                        if (baseHero != null)
+                        {
+                            Hero enemyHero = new Hero
+                            {
+                                id = baseHero.id,
+                                index = baseHero.index,
+                                grade = baseHero.grade,
+                                rarity = baseHero.rarity,
+                                att = baseHero.att,
+                                name = baseHero.name,
+                                sex = baseHero.sex,
+                                level = enemyLevel,
+                                exp = baseHero.exp,
+                                rebirth = baseHero.rebirth,
+                                growth = baseHero.growth,
+                                atk = atk,
+                                def = def,
+                                hp = hp,
+                                lead = lead,
+                                spriteName = baseHero.spriteName,
+                                equip = new List<string>(baseHero.equip),
+                                description = baseHero.description
+                            };
+
+                            if (!stageDictionary.ContainsKey(stageLevel))
+                            {
+                                stageDictionary[stageLevel] = new StageData { level = stageLevel, enemies = new List<Enemy>() };
+                            }
+
+                            stageDictionary[stageLevel].enemies.Add(new Enemy(position, enemyHero));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"Error processing row {i}: {ex.Message}");
+                    }
                 }
             }
         }
 
-        return heroRates;
+        foreach (var kvp in stageDictionary)
+        {
+            Debug.Log($"Adding stage level {kvp.Key} with {kvp.Value.enemies.Count} enemies.");
+            stages.Add(kvp.Value);
+        }
+
+        return stages;
+    }
+
+    private Vector2Int ConvertToGridPosition(int position)
+    {
+        switch (position)
+        {
+            case 1: return new Vector2Int(0, 0);
+            case 2: return new Vector2Int(1, 0);
+            case 3: return new Vector2Int(2, 0);
+            case 4: return new Vector2Int(0, 1);
+            case 5: return new Vector2Int(1, 1);
+            case 6: return new Vector2Int(2, 1);
+            case 7: return new Vector2Int(0, 2);
+            case 8: return new Vector2Int(1, 2);
+            case 9: return new Vector2Int(2, 2);
+            default: return new Vector2Int(-1, -1); // Invalid position
+        }
     }
 }
 
