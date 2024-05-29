@@ -5,25 +5,26 @@ using System.Linq;
 
 public class BattleReadyUI : MonoBehaviour
 {
-    
     public GameObject placeHeroUI;
     public Transform parentTransform;
     public GameObject heroPrefab;
     public GameObject allyPrefab;
-    public Transform allyGridParent; // 아군 GridLayout의 부모 오브젝트
+    public GameObject emptyCellPrefab;
+    public Transform allyGridParent;
 
     private Dictionary<string, GameObject> heroPrefabDictionary;
-    private List<Hero> selectedHeroes = new List<Hero>(); // 선택된 영웅 리스트
     private FirestoreManager firestoreManager;
+    private GameManager gameManager;
 
     void Start() {
         firestoreManager = FindObjectOfType<FirestoreManager>();
+        gameManager = GameManager.Instance;
         if (firestoreManager == null)
         {
             Debug.LogError("FirestoreManager not found in the scene.");
         }
     }
-    
+
     public void QuitBattleReadyUI() {
         Destroy(gameObject);
     }
@@ -32,7 +33,7 @@ public class BattleReadyUI : MonoBehaviour
         HeroList lst = await firestoreManager.GetHeroesData();
         Initialize(lst);
         placeHeroUI.SetActive(true);
-        selectedHeroes.Clear();
+        gameManager.SelectedHeroes.Clear();
     }
 
     public void QuitPlaceHeroUI() {
@@ -61,10 +62,11 @@ public class BattleReadyUI : MonoBehaviour
     {
         GameObject heroObject = Instantiate(prefab, parent);
         HeroDisplay heroDisplay = heroObject.GetComponent<HeroDisplay>();
+
         if (heroDisplay != null)
         {
             heroDisplay.SetHeroData(hero);
-            heroDisplay.OnToggleChanged = OnHeroToggleChanged; // Toggle 변경 콜백 설정
+            heroDisplay.OnToggleChanged = OnHeroToggleChanged;
             heroPrefabDictionary[hero.id] = heroObject;
         }
         else
@@ -85,45 +87,60 @@ public class BattleReadyUI : MonoBehaviour
     {
         if (isOn)
         {
-            if (selectedHeroes.Count >= 4)
+            if (gameManager.SelectedHeroes.Count >= 4)
             {
-                // 선택된 영웅 수가 4 이상일 경우
                 var toggle = heroPrefabDictionary[hero.id].GetComponent<HeroDisplay>().selectToggle;
                 toggle.isOn = false;
                 GameManager.Instance.ShowSystemMessage("4명 이상의 영웅을 선택할 수 없습니다.");
             }
             else
             {
-                selectedHeroes.Add(hero);
+                gameManager.SelectedHeroes.Add(hero);
+                
             }
         }
         else
         {
-            selectedHeroes.Remove(hero);
+            gameManager.SelectedHeroes.Remove(hero);
         }
     }
 
     public void PlaceAllies()
     {
-        // 아군 GridLayout 초기화
         foreach (Transform child in allyGridParent)
         {
             Destroy(child.gameObject);
         }
-        DoPlace(selectedHeroes);
+        DoPlace(gameManager.SelectedHeroes);
         QuitPlaceHeroUI();
-        // 선택된 영웅들을 아군 GridLayout에 배치
     }
 
     public void DoPlace(List<Hero> selected) {
-        foreach (var hero in selected)
-        {
+        int gridSize = 3 * 3; // 3x3 그리드
+        int totalHeroes = selected.Count;
+
+        // 영웅 객체들 배치
+        for (int i = 0; i < totalHeroes; i++) {
             GameObject allyObject = Instantiate(allyPrefab, allyGridParent);
             HeroDisplay heroDisplay = allyObject.GetComponent<HeroDisplay>();
-            if (heroDisplay != null)
-            {
-                heroDisplay.SetHeroData(hero);
+            ClickableHero clickableHero = allyObject.AddComponent<ClickableHero>();
+            DropZone dropZone = allyObject.AddComponent<DropZone>();
+
+            if (heroDisplay != null) {
+                heroDisplay.SetHeroData(selected[i]);
             }
+
+            if (clickableHero != null) {
+                clickableHero.heroData = selected[i];
+            }
+        }
+
+        // 빈 셀로 나머지 그리드 채우기
+        for (int i = totalHeroes; i < gridSize; i++) {
+            GameObject emptyCellObject = Instantiate(emptyCellPrefab, allyGridParent);
+            DropZone dropZone = emptyCellObject.AddComponent<DropZone>();
+            ClickableHero clickableHero = emptyCellObject.AddComponent<ClickableHero>();
+            // 빈 셀에는 heroData를 설정하지 않습니다.
         }
     }
 }

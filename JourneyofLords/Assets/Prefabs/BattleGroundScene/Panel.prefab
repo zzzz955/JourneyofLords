@@ -1787,6 +1787,7 @@ MonoBehaviour:
   parentTransform: {fileID: 8222616952184651642}
   heroPrefab: {fileID: 3054853456236198606, guid: fb4a974cfa2ba69408865b6543810a1a, type: 3}
   allyPrefab: {fileID: 1075176007472352996, guid: 6cefb56aba209144890e3446b6ad3ee8, type: 3}
+  emptyCellPrefab: {fileID: 5654686006306273017, guid: 9d5cc2aa49599d74fa932dd8bb73a2a7, type: 3}
   allyGridParent: {fileID: 3836118126264107616}
 --- !u!114 &4798670407081396092
 MonoBehaviour:

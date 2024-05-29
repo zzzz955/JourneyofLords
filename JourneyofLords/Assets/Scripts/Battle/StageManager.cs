@@ -106,6 +106,8 @@ public class StageManager : MonoBehaviour
         if (battleReadyUI != null)
         {
             GameObject instance = Instantiate(battleReadyUI, parentTransform);
+            BattleReadyUI battleReadyUIScript = instance.GetComponent<BattleReadyUI>();
+            battleReadyUIScript.DoPlace(gameManager.SelectedHeroes);
             Debug.Log("BattleReadyUI instantiated: " + instance.name);
         }
         else

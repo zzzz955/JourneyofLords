@@ -19,13 +19,14 @@ public class GameManager : Singleton<GameManager>
     public User CurrentUser { get; private set; }
     public MainUI MainUI { get; private set; }
     public HeroManager HeroManager { get; private set; }
+    public List<Hero> SelectedHeroes { get; private set; } = new List<Hero>();
 
     private FirestoreManager firestoreManager;
 
     // 시스템 메시지 관련 필드 추가
     public TMP_Text systemMessageTextPrefab;
     public Transform systemMessageParent; // 메시지를 부모로 설정할 Transform
-    private float displayDuration = 4f;
+    private float displayDuration = 3f;
     private List<GameObject> activeMessages = new List<GameObject>();
 
     protected override void Awake()
