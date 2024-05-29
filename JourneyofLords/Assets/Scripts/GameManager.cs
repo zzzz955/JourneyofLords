@@ -5,9 +5,7 @@ using System.Data;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using ExcelDataReader;
-using Firebase.Firestore;
-using Firebase.Extensions;
+using TMPro;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -23,6 +21,12 @@ public class GameManager : Singleton<GameManager>
     public HeroManager HeroManager { get; private set; }
 
     private FirestoreManager firestoreManager;
+
+    // 시스템 메시지 관련 필드 추가
+    public TMP_Text systemMessageTextPrefab;
+    public Transform systemMessageParent; // 메시지를 부모로 설정할 Transform
+    public float displayDuration = 2f;
+    private List<GameObject> activeMessages = new List<GameObject>();
 
     protected override void Awake()
     {
@@ -132,5 +136,33 @@ public class GameManager : Singleton<GameManager>
 
     public void GetEnergyInfo() {
         
+    }
+
+    // 시스템 메시지 표시 메서드 수정
+    public void ShowSystemMessage(string message)
+    {
+        GameObject messageObject = Instantiate(systemMessageTextPrefab.gameObject, systemMessageParent);
+        TMP_Text messageText = messageObject.GetComponent<TMP_Text>();
+        messageText.text = message;
+        activeMessages.Add(messageObject);
+
+        // 기존 메시지들을 위로 이동
+        for (int i = 0; i < activeMessages.Count - 1; i++)
+        {
+            RectTransform rectTransform = activeMessages[i].GetComponent<RectTransform>();
+            rectTransform.anchoredPosition += new Vector2(0, rectTransform.rect.height + 10); // 메시지 간 간격 추가
+        }
+
+        // 새로운 메시지 표시
+        StartCoroutine(DisplaySystemMessage(messageObject));
+    }
+
+    private IEnumerator DisplaySystemMessage(GameObject messageObject)
+    {
+        messageObject.SetActive(true);
+        yield return new WaitForSeconds(displayDuration);
+        messageObject.SetActive(false);
+        activeMessages.Remove(messageObject);
+        Destroy(messageObject);
     }
 }

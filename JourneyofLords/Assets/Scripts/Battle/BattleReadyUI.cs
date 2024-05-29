@@ -85,7 +85,17 @@ public class BattleReadyUI : MonoBehaviour
     {
         if (isOn)
         {
-            selectedHeroes.Add(hero);
+            if (selectedHeroes.Count >= 4)
+            {
+                // 선택된 영웅 수가 4 이상일 경우
+                var toggle = heroPrefabDictionary[hero.id].GetComponent<HeroDisplay>().selectToggle;
+                toggle.isOn = false;
+                GameManager.Instance.ShowSystemMessage("4명 이상의 영웅을 선택할 수 없습니다.");
+            }
+            else
+            {
+                selectedHeroes.Add(hero);
+            }
         }
         else
         {
