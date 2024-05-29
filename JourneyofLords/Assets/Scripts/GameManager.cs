@@ -25,7 +25,7 @@ public class GameManager : Singleton<GameManager>
     // 시스템 메시지 관련 필드 추가
     public TMP_Text systemMessageTextPrefab;
     public Transform systemMessageParent; // 메시지를 부모로 설정할 Transform
-    public float displayDuration = 2f;
+    private float displayDuration = 4f;
     private List<GameObject> activeMessages = new List<GameObject>();
 
     protected override void Awake()

@@ -66,12 +66,16 @@ public class AuthUIManager : MonoBehaviour
 
     private void OnSignUpSuccess(string email)
     {
-        signupFeedbackText.SetText("ID생성 성공! " + email);
+        string message = "ID생성 성공! " + email;
+        signupFeedbackText.SetText(message);
+        GameManager.Instance.ShowSystemMessage(message); // 시스템 메시지 표시
     }
 
     private void OnSignUpFail(string error)
     {
-        signupFeedbackText.SetText("ID생성 실패!: " + error);
+        string message = "ID생성 실패!: " + error;
+        signupFeedbackText.SetText(message);
+        GameManager.Instance.ShowSystemMessage(message); // 시스템 메시지 표시
     }
 
     public void OnLoginButtonClicked()
@@ -83,12 +87,16 @@ public class AuthUIManager : MonoBehaviour
 
     private void OnLoginSuccess(string email)
     {
-        loginFeedbackText.SetText("로그인 성공! " + email);
+        string message = "로그인 성공! " + email;
+        loginFeedbackText.SetText(message);
+        GameManager.Instance.ShowSystemMessage(message); // 시스템 메시지 표시
     }
 
     private void OnLoginFail(string error)
     {
-        loginFeedbackText.SetText("로그인 실패! " + error);
+        string message = "로그인 실패! " + error;
+        loginFeedbackText.SetText(message);
+        GameManager.Instance.ShowSystemMessage(message); // 시스템 메시지 표시
     }
 
     public void OnResetPasswordButtonClicked()
@@ -100,10 +108,12 @@ public class AuthUIManager : MonoBehaviour
     private void OnResetPasswordSuccess(string message)
     {
         findPWFeedbackText.SetText(message);
+        GameManager.Instance.ShowSystemMessage(message); // 시스템 메시지 표시
     }
 
     private void OnResetPasswordFail(string error)
     {
         findPWFeedbackText.SetText(error);
+        GameManager.Instance.ShowSystemMessage(error); // 시스템 메시지 표시
     }
 }
