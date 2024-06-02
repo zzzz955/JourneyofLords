@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class BattleReadyUI : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class BattleReadyUI : MonoBehaviour
     public GameObject allyPrefab;
     public GameObject emptyCellPrefab;
     public Transform allyGridParent;
+    public Button startBattleButton; // 전투 시작 버튼
 
     private Dictionary<string, GameObject> heroPrefabDictionary;
     private FirestoreManager firestoreManager;
@@ -23,6 +26,8 @@ public class BattleReadyUI : MonoBehaviour
         {
             Debug.LogError("FirestoreManager not found in the scene.");
         }
+
+        startBattleButton.onClick.AddListener(OnStartBattleButtonClicked); // 전투 시작 버튼 클릭 리스너 추가
     }
 
     public void QuitBattleReadyUI() {
@@ -96,7 +101,6 @@ public class BattleReadyUI : MonoBehaviour
             else
             {
                 gameManager.SelectedHeroes.Add(hero);
-                
             }
         }
         else
@@ -123,8 +127,8 @@ public class BattleReadyUI : MonoBehaviour
         for (int i = 0; i < totalHeroes; i++) {
             GameObject allyObject = Instantiate(allyPrefab, allyGridParent);
             HeroDisplay heroDisplay = allyObject.GetComponent<HeroDisplay>();
-            ClickableHero clickableHero = allyObject.AddComponent<ClickableHero>();
-            DropZone dropZone = allyObject.AddComponent<DropZone>();
+            ClickableHero clickableHero = allyObject.GetComponent<ClickableHero>();
+            DropZone dropZone = allyObject.GetComponent<DropZone>();
 
             if (heroDisplay != null) {
                 heroDisplay.SetHeroData(selected[i]);
@@ -138,9 +142,22 @@ public class BattleReadyUI : MonoBehaviour
         // 빈 셀로 나머지 그리드 채우기
         for (int i = totalHeroes; i < gridSize; i++) {
             GameObject emptyCellObject = Instantiate(emptyCellPrefab, allyGridParent);
-            DropZone dropZone = emptyCellObject.AddComponent<DropZone>();
-            ClickableHero clickableHero = emptyCellObject.AddComponent<ClickableHero>();
-            // 빈 셀에는 heroData를 설정하지 않습니다.
+            DropZone dropZone = emptyCellObject.GetComponent<DropZone>();
+            ClickableHero clickableHero = emptyCellObject.GetComponent<ClickableHero>();
+        }
+    }
+
+    // 전투 시작 버튼 클릭 핸들러
+    private void OnStartBattleButtonClicked()
+    {
+        // 선택된 영웅이 1명 이상이어야 전투 시작
+        if (gameManager.SelectedHeroes.Count > 0)
+        {
+            SceneManager.LoadScene("Battle");
+        }
+        else
+        {
+            GameManager.Instance.ShowSystemMessage("전투를 시작하려면 최소 1명의 영웅을 선택해야 합니다.");
         }
     }
 }

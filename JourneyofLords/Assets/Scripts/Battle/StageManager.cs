@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using Firebase.Auth;
 using TMPro;
 
@@ -77,7 +78,7 @@ public class StageManager : MonoBehaviour
         {
             GameObject buttonObj = Instantiate(stageButtonPrefab, buttonContainer);
             StageButton stageButton = buttonObj.GetComponent<StageButton>();
-            stageButton.Setup(i, i <= maxStage + 1);
+            stageButton.Setup(i, i <= maxStage);
         }
 
         // 페이지 전환 버튼 활성화/비활성화 설정
@@ -97,47 +98,76 @@ public class StageManager : MonoBehaviour
         UpdateButtons();
     }
 
-    public void UpdateEnergyText(int cur, int max) {
+    public void UpdateEnergyText(int cur, int max)
+    {
         energyInfo.SetText(cur + "/" + max);
     }
 
-    public void ShowBattleReadyUI() {
+    public void ShowBattleReadyUI()
+    {
         Debug.Log("ShowBattleReadyUI called");
-        if (battleReadyUI != null)
+
+        if (battleReadyUI == null)
         {
-            GameObject instance = Instantiate(battleReadyUI, parentTransform);
-            BattleReadyUI battleReadyUIScript = instance.GetComponent<BattleReadyUI>();
+            Debug.LogError("battleReadyUI is not assigned.");
+            return;
+        }
+
+        if (parentTransform == null)
+        {
+            Debug.LogError("parentTransform is not assigned.");
+            return;
+        }
+
+        if (gameManager == null)
+        {
+            Debug.LogError("gameManager is not assigned.");
+            return;
+        }
+
+        if (gameManager.SelectedHeroes == null)
+        {
+            Debug.LogError("SelectedHeroes is not assigned.");
+            return;
+        }
+
+        if (gameManager.SelectedStage == null)
+        {
+            Debug.LogError("SelectedStage is not assigned.");
+            return;
+        }
+
+        GameObject instance = Instantiate(battleReadyUI, parentTransform);
+        BattleReadyUI battleReadyUIScript = instance.GetComponent<BattleReadyUI>();
+
+        if (battleReadyUIScript != null)
+        {
             battleReadyUIScript.DoPlace(gameManager.SelectedHeroes);
-            Debug.Log("BattleReadyUI instantiated: " + instance.name);
+
+            // 적군 배치
+            EnemyPlacer enemyPlacer = instance.GetComponentInChildren<EnemyPlacer>();
+            if (enemyPlacer != null)
+            {
+                enemyPlacer.PlaceEnemies(gameManager.SelectedStage.enemies);
+            }
+            else
+            {
+                Debug.LogError("EnemyPlacer not found in the BattleReadyUI.");
+            }
         }
         else
         {
-            Debug.LogError("battleReadyUI prefab is not assigned.");
+            Debug.LogError("BattleReadyUI component not found on instantiated object.");
         }
     }
 
     public void LoadStage(int stageLevel)
     {
         Debug.Log("LoadStage called for stage: " + stageLevel);
-        Debug.Log("Total stages loaded: " + gameManager.StageDataList.Count);
-        foreach (var stageData in gameManager.StageDataList)
-        {
-            Debug.Log("Loaded stage level: " + stageData.level);
-        }
-        
         StageData selectedStage = gameManager.StageDataList.Find(s => s.level == stageLevel);
         if (selectedStage != null)
         {
-            Debug.Log($"Stage found for level {stageLevel} with {selectedStage.enemies.Count} enemies.");
-            EnemyPlacer enemyPlacer = FindObjectOfType<EnemyPlacer>();
-            if (enemyPlacer != null)
-            {
-                enemyPlacer.PlaceEnemies(selectedStage.enemies);
-            }
-            else
-            {
-                Debug.LogError("EnemyPlacer not found in the scene.");
-            }
+            gameManager.SelectedStage = selectedStage;
         }
         else
         {

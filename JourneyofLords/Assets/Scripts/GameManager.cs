@@ -20,6 +20,7 @@ public class GameManager : Singleton<GameManager>
     public MainUI MainUI { get; private set; }
     public HeroManager HeroManager { get; private set; }
     public List<Hero> SelectedHeroes { get; private set; } = new List<Hero>();
+    public StageData SelectedStage { get; set; }
 
     private FirestoreManager firestoreManager;
 
@@ -32,9 +33,14 @@ public class GameManager : Singleton<GameManager>
     protected override void Awake()
     {
         base.Awake();
-        DontDestroyOnLoad(gameObject);
-        firestoreManager = FindObjectOfType<FirestoreManager>();
-        LoadAllData();
+
+        Debug.Log("GameManager Awake 호출됨");
+
+        if (Instance == this)
+        {
+            firestoreManager = FindObjectOfType<FirestoreManager>();
+            LoadAllData();
+        }
     }
 
     private void Start()

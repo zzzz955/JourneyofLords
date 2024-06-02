@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
-
 public class StageButton : MonoBehaviour
 {
     public TMP_Text stageText;
@@ -22,7 +21,14 @@ public class StageButton : MonoBehaviour
     public void Clicked()
     {
         StageManager stageManager = FindObjectOfType<StageManager>();
-        if (stageManager != null) {stageManager.ShowBattleReadyUI();}
-        if (stageManager != null) {stageManager.LoadStage(stageNumber);}
+        if (stageManager != null)
+        {
+            stageManager.LoadStage(stageNumber); // 먼저 LoadStage 호출
+            stageManager.ShowBattleReadyUI(); // 그 다음 ShowBattleReadyUI 호출
+        }
+        else
+        {
+            Debug.LogError("StageManager not found.");
+        }
     }
 }

@@ -23,15 +23,10 @@ public class EnemyPlacer : MonoBehaviour
         foreach (var enemy in enemyList)
         {
             int index = ConvertToGridIndex(enemy.position);
-            Debug.Log($"Converted position {enemy.position} to index {index}");
             if (index >= 0 && index < gridSize)
             {
                 // 적군 위치를 Dictionary에 추가합니다.
                 enemyPositions[index] = enemy;
-            }
-            else
-            {
-                Debug.LogError($"Invalid grid position: {enemy.position} converted to index {index}");
             }
         }
 
@@ -49,20 +44,17 @@ public class EnemyPlacer : MonoBehaviour
                 {
                     enemyScript.Initialize(enemyPositions[i].hero);
                 }
-                Debug.Log($"Placed enemy at index {i}");
             }
             else
             {
                 // 적군이 할당되지 않은 경우 빈 오브젝트 생성
                 Instantiate(emptyPrefab, cell);
-                Debug.Log($"Placed empty object at index {i}");
             }
         }
     }
 
     private int ConvertToGridIndex(Vector2Int gridPosition)
     {
-        Debug.Log($"Converting grid position {gridPosition}");
         // 3x3 그리드의 인덱스를 계산합니다.
         return gridPosition.y * 3 + gridPosition.x;
     }
