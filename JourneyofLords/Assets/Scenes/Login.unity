@@ -4053,6 +4053,9 @@ MonoBehaviour:
   - Scripts/GameData/HeroRecruit2.xlsx
   - Scripts/GameData/HeroRecruit3.xlsx
   stageDataFilePath: Scripts/GameData/StageData.xlsx
+  allyPrefab: {fileID: 1075176007472352996, guid: 6cefb56aba209144890e3446b6ad3ee8, type: 3}
+  enemyPrefab: {fileID: 1075176007472352996, guid: a42ddc31dab2a1545a14664835ad8c45, type: 3}
+  emptyCellPrefab: {fileID: 5654686006306273017, guid: 9d5cc2aa49599d74fa932dd8bb73a2a7, type: 3}
   systemMessageTextPrefab: {fileID: 6873975627965138897, guid: 58091e4543f515a438086e02f5d87295, type: 3}
   systemMessageParent: {fileID: 579480317}
 --- !u!4 &1411151620

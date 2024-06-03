@@ -1790,6 +1790,7 @@ MonoBehaviour:
   emptyCellPrefab: {fileID: 5654686006306273017, guid: 98e140cb44b05cf489bfd9bc73485a37, type: 3}
   allyGridParent: {fileID: 3836118126264107616}
   startBattleButton: {fileID: 844690577664351361}
+  battleUIPrefab: {fileID: 4397854162185960780, guid: 95a518e675f19694b900c00edb2ddba0, type: 3}
 --- !u!114 &4798670407081396092
 MonoBehaviour:
   m_ObjectHideFlags: 0

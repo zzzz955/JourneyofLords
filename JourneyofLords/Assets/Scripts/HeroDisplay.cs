@@ -50,6 +50,11 @@ public class HeroDisplay : MonoBehaviour
         if (selectToggle != null) {selectToggle.onValueChanged.AddListener(OnToggleValueChanged);}
     }
 
+    public Hero GetHero()
+    {
+        return currentHero;
+    }
+
     public void OnClick()
     {
         // 팝업 생성 및 데이터 설정

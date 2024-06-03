@@ -21,6 +21,10 @@ public class GameManager : Singleton<GameManager>
     public HeroManager HeroManager { get; private set; }
     public List<Hero> SelectedHeroes { get; private set; } = new List<Hero>();
     public StageData SelectedStage { get; set; }
+    public GameObject allyPrefab;
+    public GameObject enemyPrefab;
+    public GameObject emptyCellPrefab;
+
 
     private FirestoreManager firestoreManager;
 

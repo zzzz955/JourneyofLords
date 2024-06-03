@@ -12,18 +12,4 @@ public class Enemy
         this.position = position;
         this.hero = hero;
     }
-
-    public int Health
-    {
-        get { return hero.Health; }
-        set { hero.Health = value; }
-    }
-
-    public int Atk => (int)hero.atk;
-    public int Def => (int)hero.def;
-
-    public bool IsAlive()
-    {
-        return hero.IsAlive();
-    }
 }

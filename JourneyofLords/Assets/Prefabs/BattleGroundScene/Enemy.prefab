@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2807901879260354466}
   - component: {fileID: 944474095697118150}
   - component: {fileID: 688118531624386623}
+  - component: {fileID: -7702992759084346655}
   - component: {fileID: 443282642134697559}
   m_Layer: 5
   m_Name: Enemy
@@ -63,6 +64,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   troops: {fileID: 954212484078239679}
   spriteImage: {fileID: 2056200042980450432}
+--- !u!114 &-7702992759084346655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1075176007472352996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e185c94939d4264a8e357d17daba10b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteImage: {fileID: 2056200042980450432}
+  lvImage: {fileID: 0}
+  gradeImage: {fileID: 0}
+  levelText: {fileID: 0}
+  heroName: {fileID: 0}
+  heroATK: {fileID: 0}
+  heroDEF: {fileID: 0}
+  heroTroops: {fileID: 954212484078239679}
+  popupHeroDicPrefab: {fileID: 0}
+  selectToggle: {fileID: 0}
 --- !u!114 &443282642134697559
 MonoBehaviour:
   m_ObjectHideFlags: 0

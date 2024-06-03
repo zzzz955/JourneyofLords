@@ -49,25 +49,27 @@ public class ExcelDataLoader : MonoBehaviour
                 {
                     var row = table.Rows[i];
                     Hero hero = new Hero
+                    (
+                        row[5].ToString(), // name
+                        float.Parse(row[11].ToString()), // atk
+                        float.Parse(row[12].ToString()), // def
+                        float.Parse(row[14].ToString()) // lead
+                    )
                     {
                         id = row[0].ToString(),
                         index = int.Parse(row[1].ToString()),
                         grade = int.Parse(row[2].ToString()),
                         rarity = int.Parse(row[3].ToString()),
                         att = row[4].ToString(),
-                        name = row[5].ToString(),
                         sex = row[6].ToString(),
                         level = int.Parse(row[7].ToString()),
                         exp = int.Parse(row[8].ToString()),
                         rebirth = int.Parse(row[9].ToString()),
                         growth = int.Parse(row[10].ToString()),
-                        atk = float.Parse(row[11].ToString()),
-                        def = float.Parse(row[12].ToString()),
                         hp = float.Parse(row[13].ToString()),
-                        lead = float.Parse(row[14].ToString()),
                         spriteName = row[15].ToString(),
                         equip = new List<string>(row[16].ToString().Split(';')),
-                        description = row[17].ToString(),
+                        description = row[17].ToString()
                     };
                     heroes.Add(hero);
                 }
@@ -142,22 +144,24 @@ public class ExcelDataLoader : MonoBehaviour
                         if (baseHero != null)
                         {
                             Hero enemyHero = new Hero
+                            (
+                                baseHero.name, // name
+                                atk, // atk
+                                def, // def
+                                lead // lead
+                            )
                             {
                                 id = baseHero.id,
                                 index = baseHero.index,
                                 grade = baseHero.grade,
                                 rarity = baseHero.rarity,
                                 att = baseHero.att,
-                                name = baseHero.name,
                                 sex = baseHero.sex,
                                 level = enemyLevel,
                                 exp = baseHero.exp,
                                 rebirth = baseHero.rebirth,
                                 growth = baseHero.growth,
-                                atk = atk,
-                                def = def,
                                 hp = hp,
-                                lead = lead,
                                 spriteName = baseHero.spriteName,
                                 equip = new List<string>(baseHero.equip),
                                 description = baseHero.description
@@ -190,19 +194,18 @@ public class ExcelDataLoader : MonoBehaviour
 
     private Vector2Int ConvertToGridPosition(int position)
     {
-        switch (position)
+        return position switch
         {
-            case 1: return new Vector2Int(0, 0);
-            case 2: return new Vector2Int(1, 0);
-            case 3: return new Vector2Int(2, 0);
-            case 4: return new Vector2Int(0, 1);
-            case 5: return new Vector2Int(1, 1);
-            case 6: return new Vector2Int(2, 1);
-            case 7: return new Vector2Int(0, 2);
-            case 8: return new Vector2Int(1, 2);
-            case 9: return new Vector2Int(2, 2);
-            default: return new Vector2Int(-1, -1); // Invalid position
-        }
+            1 => new Vector2Int(0, 0),
+            2 => new Vector2Int(1, 0),
+            3 => new Vector2Int(2, 0),
+            4 => new Vector2Int(0, 1),
+            5 => new Vector2Int(1, 1),
+            6 => new Vector2Int(2, 1),
+            7 => new Vector2Int(0, 2),
+            8 => new Vector2Int(1, 2),
+            9 => new Vector2Int(2, 2),
+            _ => new Vector2Int(-1, -1), // Invalid position
+        };
     }
 }
-
