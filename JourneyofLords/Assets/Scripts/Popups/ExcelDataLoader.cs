@@ -166,13 +166,6 @@ public class ExcelDataLoader : MonoBehaviour
                                 equip = new List<string>(baseHero.equip),
                                 description = baseHero.description
                             };
-
-                            if (!stageDictionary.ContainsKey(stageLevel))
-                            {
-                                stageDictionary[stageLevel] = new StageData { level = stageLevel, enemies = new List<Enemy>() };
-                            }
-
-                            stageDictionary[stageLevel].enemies.Add(new Enemy(position, enemyHero));
                         }
                     }
                     catch (Exception ex)

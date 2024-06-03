@@ -28,8 +28,6 @@ public class BattleReadyUI : MonoBehaviour
         {
             Debug.LogError("FirestoreManager not found in the scene.");
         }
-
-        startBattleButton.onClick.AddListener(OnStartBattleButtonClicked); // 전투 시작 버튼 클릭 리스너 추가
     }
 
     public void QuitBattleReadyUI()
@@ -154,48 +152,6 @@ public class BattleReadyUI : MonoBehaviour
             GameObject emptyCellObject = Instantiate(emptyCellPrefab, allyGridParent);
             DropZone dropZone = emptyCellObject.GetComponent<DropZone>();
             ClickableHero clickableHero = emptyCellObject.GetComponent<ClickableHero>();
-        }
-    }
-
-    // 전투 시작 버튼 클릭 핸들러
-    private void OnStartBattleButtonClicked()
-    {
-        // 선택된 영웅이 1명 이상이어야 전투 시작
-        if (gameManager.SelectedHeroes.Count > 0)
-        {
-            ShowBattleUI();
-        }
-        else
-        {
-            GameManager.Instance.ShowSystemMessage("전투를 시작하려면 최소 1명의 영웅을 선택해야 합니다.");
-        }
-    }
-
-    private void ShowBattleUI()
-    {
-        // Main Canvas를 명확하게 찾습니다.
-        Canvas mainCanvas = GameObject.Find("MainCanvas").GetComponent<Canvas>();
-        if (mainCanvas == null)
-        {
-            Debug.LogError("Main Canvas not found in the scene.");
-            return;
-        }
-
-        // BattleUI 프리팹을 mainCanvas의 자식으로 인스턴스화합니다.
-        GameObject battleUI = Instantiate(battleUIPrefab, mainCanvas.transform);
-        battleUI.SetActive(true);
-
-        // BattleManagerUI 컴포넌트를 가져와서 초기화합니다.
-        BattleManagerUI battleManager = battleUI.GetComponentInChildren<BattleManagerUI>();
-
-        if (battleManager != null)
-        {
-            battleManager.InitializeBattle();
-        }
-        else
-        {
-            Debug.LogError("BattleManagerUI 컴포넌트를 찾을 수 없습니다.");
-            Destroy(battleUI);
         }
     }
 }

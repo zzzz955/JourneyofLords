@@ -17,18 +17,4 @@ public class StageButton : MonoBehaviour
         isUnlocked = unlocked;
         stageText.SetText(stage.ToString());
     }
-
-    public void Clicked()
-    {
-        StageManager stageManager = FindObjectOfType<StageManager>();
-        if (stageManager != null)
-        {
-            stageManager.LoadStage(stageNumber); // 먼저 LoadStage 호출
-            stageManager.ShowBattleReadyUI(); // 그 다음 ShowBattleReadyUI 호출
-        }
-        else
-        {
-            Debug.LogError("StageManager not found.");
-        }
-    }
 }

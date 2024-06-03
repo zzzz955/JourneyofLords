@@ -103,64 +103,6 @@ public class StageManager : MonoBehaviour
         energyInfo.SetText(cur + "/" + max);
     }
 
-    public void ShowBattleReadyUI()
-    {
-        Debug.Log("ShowBattleReadyUI called");
-
-        if (battleReadyUI == null)
-        {
-            Debug.LogError("battleReadyUI is not assigned.");
-            return;
-        }
-
-        if (parentTransform == null)
-        {
-            Debug.LogError("parentTransform is not assigned.");
-            return;
-        }
-
-        if (gameManager == null)
-        {
-            Debug.LogError("gameManager is not assigned.");
-            return;
-        }
-
-        if (gameManager.SelectedHeroes == null)
-        {
-            Debug.LogError("SelectedHeroes is not assigned.");
-            return;
-        }
-
-        if (gameManager.SelectedStage == null)
-        {
-            Debug.LogError("SelectedStage is not assigned.");
-            return;
-        }
-
-        GameObject instance = Instantiate(battleReadyUI, parentTransform);
-        BattleReadyUI battleReadyUIScript = instance.GetComponent<BattleReadyUI>();
-
-        if (battleReadyUIScript != null)
-        {
-            battleReadyUIScript.DoPlace(gameManager.SelectedHeroes);
-
-            // 적군 배치
-            EnemyPlacer enemyPlacer = instance.GetComponentInChildren<EnemyPlacer>();
-            if (enemyPlacer != null)
-            {
-                enemyPlacer.PlaceEnemies(gameManager.SelectedStage.enemies);
-            }
-            else
-            {
-                Debug.LogError("EnemyPlacer not found in the BattleReadyUI.");
-            }
-        }
-        else
-        {
-            Debug.LogError("BattleReadyUI component not found on instantiated object.");
-        }
-    }
-
     public void LoadStage(int stageLevel)
     {
         Debug.Log("LoadStage called for stage: " + stageLevel);
