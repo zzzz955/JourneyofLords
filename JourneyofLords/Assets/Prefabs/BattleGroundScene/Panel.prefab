@@ -1478,6 +1478,7 @@ MonoBehaviour:
   enemyGridParent: {fileID: 5318189184680008521}
   startBattleButton: {fileID: 844690577664351361}
   battleUIPrefab: {fileID: 4397854162185960780, guid: 95a518e675f19694b900c00edb2ddba0, type: 3}
+  currentStage: 0
 --- !u!114 &6321723984900321355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1716,7 +1717,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4545431679885030487}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5465255527946143744}
+        m_TargetAssemblyTypeName: BattleReadyUI, Assembly-CSharp
+        m_MethodName: TempStageClear
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4237978103357428834
 GameObject:
   m_ObjectHideFlags: 0

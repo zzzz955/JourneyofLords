@@ -25,7 +25,6 @@ public class GameManager : Singleton<GameManager>
     public GameObject enemyPrefab;
     public GameObject emptyCellPrefab;
 
-
     private FirestoreManager firestoreManager;
 
     // 시스템 메시지 관련 필드 추가

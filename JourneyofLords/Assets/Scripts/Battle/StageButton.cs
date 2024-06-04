@@ -11,6 +11,11 @@ public class StageButton : MonoBehaviour
     private int stageNumber;
     private bool isUnlocked;
     private List<Hero> selectedHeroes = new List<Hero>();
+    private GameManager gameManager;
+
+    void Start() {
+        gameManager = GameManager.Instance;
+    }
 
     public void Setup(int stage, bool unlocked)
     {
@@ -27,9 +32,15 @@ public class StageButton : MonoBehaviour
     public void ShowbattleReadyUI() {
         GameObject battleReady = Instantiate(battleReadyUIPrefab, transform.parent.parent);
         BattleReadyUI battleReadyUIScript = battleReady.GetComponent<BattleReadyUI>();
-        if (battleReadyUIScript != null)
-        {
+        if (battleReadyUIScript != null) {
+            if (gameManager.SelectedHeroes.Count != 0) {
+                List<Hero> selected = gameManager.SelectedHeroes;
+                if (selected != null) {
+                    battleReadyUIScript.DoPlace(selected);
+                }
+            }
             battleReadyUIScript.DoEnemyPlace(stageNumber);
+            battleReadyUIScript.currentStage = stageNumber;
         }
     }
 }

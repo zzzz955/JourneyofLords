@@ -21,6 +21,7 @@ public class BattleReadyUI : MonoBehaviour
     private Dictionary<string, GameObject> heroPrefabDictionary;
     private FirestoreManager firestoreManager;
     private GameManager gameManager;
+    public int currentStage;
 
     void Start()
     {
@@ -176,6 +177,15 @@ public class BattleReadyUI : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    public void TempStageClear() {
+        GameObject stageManagerObject = GameObject.Find("StageManager");
+        if (stageManagerObject != null) {
+            StageManager stageManager = stageManagerObject.GetComponent<StageManager>();
+            stageManager.StageCleared(currentStage);
+            Destroy(gameObject);
         }
     }
 }
