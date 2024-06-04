@@ -4,16 +4,21 @@ using System.IO;
 using UnityEngine;
 using ExcelDataReader;
 
-public class ExcelDataLoader : MonoBehaviour
+public class ExcelDataLoader : ScriptableObject
 {
     public string heroDataFilePath; // 영웅 정보 파일 경로
     public string[] rateDataFilePaths; // 확률 정보 파일 경로
 
-    private List<User> users = new List<User>();
     private HeroList heroList;
     private List<List<HeroRate>> heroRatesList = new List<List<HeroRate>>();
 
-    void Start()
+    public void Initialize(string heroDataFilePath, string[] rateDataFilePaths)
+    {
+        this.heroDataFilePath = heroDataFilePath;
+        this.rateDataFilePaths = rateDataFilePaths;
+    }
+
+    public void LoadAllData()
     {
         string heroDataPath = Path.Combine(Application.dataPath, heroDataFilePath);
         heroList = LoadHeroData(heroDataPath);
@@ -49,27 +54,24 @@ public class ExcelDataLoader : MonoBehaviour
                 {
                     var row = table.Rows[i];
                     Hero hero = new Hero
-                    (
-                        row[5].ToString(), // name
-                        float.Parse(row[11].ToString()), // atk
-                        float.Parse(row[12].ToString()), // def
-                        float.Parse(row[14].ToString()) // lead
-                    )
                     {
                         id = row[0].ToString(),
                         index = int.Parse(row[1].ToString()),
                         grade = int.Parse(row[2].ToString()),
                         rarity = int.Parse(row[3].ToString()),
                         att = row[4].ToString(),
+                        name = row[5].ToString(),
                         sex = row[6].ToString(),
                         level = int.Parse(row[7].ToString()),
                         exp = int.Parse(row[8].ToString()),
                         rebirth = int.Parse(row[9].ToString()),
                         growth = int.Parse(row[10].ToString()),
+                        atk = float.Parse(row[11].ToString()),
+                        def = float.Parse(row[12].ToString()),
                         hp = float.Parse(row[13].ToString()),
-                        spriteName = row[15].ToString(),
-                        equip = new List<string>(row[16].ToString().Split(';')),
-                        description = row[17].ToString()
+                        spriteName = row[14].ToString(),
+                        equip = new List<string>(row[15].ToString().Split(';')),
+                        description = row[16].ToString()
                     };
                     heroes.Add(hero);
                 }
@@ -129,43 +131,48 @@ public class ExcelDataLoader : MonoBehaviour
                     {
                         int stageLevel = int.Parse(row[0].ToString());
                         int enemyIndex = int.Parse(row[1].ToString());
-                        int enemyPos = int.Parse(row[2].ToString());
-                        Vector2Int position = ConvertToGridPosition(enemyPos);
-                        int heroIndex = int.Parse(row[3].ToString());
-                        int enemyLevel = int.Parse(row[4].ToString());
-                        float atk = float.Parse(row[5].ToString());
-                        float def = float.Parse(row[6].ToString());
-                        float hp = float.Parse(row[7].ToString());
-                        float lead = float.Parse(row[8].ToString());
-
-                        Debug.Log($"Stage: {stageLevel}, EnemyIndex: {enemyIndex}, Position: {position}, HeroIndex: {heroIndex}");
+                        int heroIndex = int.Parse(row[2].ToString());
+                        int enemyLevel = int.Parse(row[3].ToString());
+                        float atk = float.Parse(row[4].ToString());
+                        float def = float.Parse(row[5].ToString());
+                        float hp = float.Parse(row[6].ToString());
 
                         Hero baseHero = GameManager.Instance.HeroList.heroes.Find(hero => hero.index == heroIndex);
                         if (baseHero != null)
                         {
                             Hero enemyHero = new Hero
-                            (
-                                baseHero.name, // name
-                                atk, // atk
-                                def, // def
-                                lead // lead
-                            )
                             {
                                 id = baseHero.id,
                                 index = baseHero.index,
                                 grade = baseHero.grade,
                                 rarity = baseHero.rarity,
                                 att = baseHero.att,
+                                name = baseHero.name,
                                 sex = baseHero.sex,
                                 level = enemyLevel,
                                 exp = baseHero.exp,
                                 rebirth = baseHero.rebirth,
                                 growth = baseHero.growth,
+                                atk = atk,
+                                def = def,
                                 hp = hp,
                                 spriteName = baseHero.spriteName,
                                 equip = new List<string>(baseHero.equip),
                                 description = baseHero.description
                             };
+
+                            Enemy enemy = new Enemy
+                            {
+                                position = enemyIndex,
+                                hero = enemyHero
+                            };
+
+                            if (!stageDictionary.ContainsKey(stageLevel))
+                            {
+                                stageDictionary[stageLevel] = new StageData(stageLevel, new List<Enemy>());
+                            }
+
+                            stageDictionary[stageLevel].enemies.Add(enemy);
                         }
                     }
                     catch (Exception ex)
@@ -178,27 +185,9 @@ public class ExcelDataLoader : MonoBehaviour
 
         foreach (var kvp in stageDictionary)
         {
-            Debug.Log($"Adding stage level {kvp.Key} with {kvp.Value.enemies.Count} enemies.");
             stages.Add(kvp.Value);
         }
 
         return stages;
-    }
-
-    private Vector2Int ConvertToGridPosition(int position)
-    {
-        return position switch
-        {
-            1 => new Vector2Int(0, 0),
-            2 => new Vector2Int(1, 0),
-            3 => new Vector2Int(2, 0),
-            4 => new Vector2Int(0, 1),
-            5 => new Vector2Int(1, 1),
-            6 => new Vector2Int(2, 1),
-            7 => new Vector2Int(0, 2),
-            8 => new Vector2Int(1, 2),
-            9 => new Vector2Int(2, 2),
-            _ => new Vector2Int(-1, -1), // Invalid position
-        };
     }
 }

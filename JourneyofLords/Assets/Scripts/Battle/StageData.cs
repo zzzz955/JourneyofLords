@@ -16,12 +16,6 @@ public class StageData
 
 public class Enemy
 {
-    public Vector2Int position;
+    public int position;
     public Hero hero;
-
-    public Enemy(Vector2Int position, Hero hero)
-    {
-        this.position = position;
-        this.hero = hero;
-    }
 }

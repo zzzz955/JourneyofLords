@@ -12,7 +12,6 @@ public class StageManager : MonoBehaviour
     public Button prevButton; // 이전 페이지 버튼
     public TMP_Text energyInfo;
     public Transform parentTransform;
-    public GameObject battleReadyUI;
 
     private int currentPage = 0;
     private int stagesPerPage = 10;
@@ -78,7 +77,7 @@ public class StageManager : MonoBehaviour
         {
             GameObject buttonObj = Instantiate(stageButtonPrefab, buttonContainer);
             StageButton stageButton = buttonObj.GetComponent<StageButton>();
-            stageButton.Setup(i, i <= maxStage);
+            stageButton.Setup(i, i <= maxStage + 1);
         }
 
         // 페이지 전환 버튼 활성화/비활성화 설정

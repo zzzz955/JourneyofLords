@@ -11,8 +11,10 @@ public class BattleReadyUI : MonoBehaviour
     public Transform parentTransform;
     public GameObject heroPrefab;
     public GameObject allyPrefab;
+    public GameObject enemyPrefab;
     public GameObject emptyCellPrefab;
     public Transform allyGridParent;
+    public Transform enemyGridParent;
     public Button startBattleButton; // 전투 시작 버튼
     public GameObject battleUIPrefab; // 전투 UI 프리팹
 
@@ -124,7 +126,7 @@ public class BattleReadyUI : MonoBehaviour
 
     public void DoPlace(List<Hero> selected)
     {
-        int gridSize = 3 * 3; // 3x3 그리드
+        int gridSize = 4;
         int totalHeroes = selected.Count;
 
         // 영웅 객체들 배치
@@ -132,8 +134,8 @@ public class BattleReadyUI : MonoBehaviour
         {
             GameObject allyObject = Instantiate(allyPrefab, allyGridParent);
             HeroDisplay heroDisplay = allyObject.GetComponent<HeroDisplay>();
-            ClickableHero clickableHero = allyObject.GetComponent<ClickableHero>();
-            DropZone dropZone = allyObject.GetComponent<DropZone>();
+            ClickableHero clickableHero = allyObject.AddComponent<ClickableHero>();
+            DropZone dropZone = allyObject.AddComponent<DropZone>();
 
             if (heroDisplay != null)
             {
@@ -150,8 +152,30 @@ public class BattleReadyUI : MonoBehaviour
         for (int i = totalHeroes; i < gridSize; i++)
         {
             GameObject emptyCellObject = Instantiate(emptyCellPrefab, allyGridParent);
-            DropZone dropZone = emptyCellObject.GetComponent<DropZone>();
-            ClickableHero clickableHero = emptyCellObject.GetComponent<ClickableHero>();
+            DropZone dropZone = emptyCellObject.AddComponent<DropZone>();
+            ClickableHero clickableHero = emptyCellObject.AddComponent<ClickableHero>();
+        }
+    }
+
+    public void DoEnemyPlace(int currentStageLevel) {
+        List<StageData> stageDataList = GameManager.Instance.StageDataList;
+        StageData currentStageData = stageDataList.Find(stage => stage.level == currentStageLevel);
+        if (currentStageData != null)
+        {
+            List<Enemy> enemies = currentStageData.enemies;
+            int totalEnemies = enemies.Count;
+            for (int i = 0; i < totalEnemies; i++) {
+                if (i == enemies[i].position) {
+                    GameObject enemyObject = Instantiate(enemyPrefab, enemyGridParent);
+                    HeroDisplay heroDisplay = enemyObject.GetComponent<HeroDisplay>();
+                    if (heroDisplay != null) {
+                        heroDisplay.SetHeroData(enemies[i].hero);
+                    }
+                    else {
+                        GameObject emptyCellObject = Instantiate(emptyCellPrefab, enemyGridParent);
+                    }
+                }
+            }
         }
     }
 }

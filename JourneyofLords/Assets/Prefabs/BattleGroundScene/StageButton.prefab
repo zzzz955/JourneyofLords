@@ -62,6 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stageText: {fileID: 6565706846758300342}
+  battleReadyUIPrefab: {fileID: 3042313187052476900, guid: 6260073f3f82c674e8d115ec3e478393, type: 3}
 --- !u!114 &5831978742327476848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,7 +151,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: -6881979895458795189}
         m_TargetAssemblyTypeName: StageButton, Assembly-CSharp
-        m_MethodName: Clicked
+        m_MethodName: ShowbattleReadyUI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

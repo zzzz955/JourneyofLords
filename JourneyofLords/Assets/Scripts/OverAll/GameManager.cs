@@ -91,7 +91,6 @@ public class GameManager : Singleton<GameManager>
 
     private void LoadAllData()
     {
-        Debug.Log("Loading all data...");
         HeroList = LoadHeroData(heroDataFilePath);
         HeroRatesList = LoadHeroRates(rateDataFilePaths);
         StageDataList = LoadStageData(stageDataFilePath);
@@ -117,14 +116,16 @@ public class GameManager : Singleton<GameManager>
     private HeroList LoadHeroData(string filePath)
     {
         string fullPath = Path.Combine(Application.dataPath, filePath);
-        ExcelDataLoader dataLoader = new ExcelDataLoader();
+        ExcelDataLoader dataLoader = ScriptableObject.CreateInstance<ExcelDataLoader>();
+        dataLoader.Initialize(heroDataFilePath, rateDataFilePaths);
         return dataLoader.LoadHeroData(fullPath);
     }
 
     private List<List<HeroRate>> LoadHeroRates(string[] filePaths)
     {
         List<List<HeroRate>> heroRatesList = new List<List<HeroRate>>();
-        ExcelDataLoader dataLoader = new ExcelDataLoader();
+        ExcelDataLoader dataLoader = ScriptableObject.CreateInstance<ExcelDataLoader>();
+        dataLoader.Initialize(heroDataFilePath, filePaths);
         foreach (var filePath in filePaths)
         {
             string fullPath = Path.Combine(Application.dataPath, filePath);
@@ -136,7 +137,8 @@ public class GameManager : Singleton<GameManager>
     private List<StageData> LoadStageData(string filePath)
     {
         string fullPath = Path.Combine(Application.dataPath, filePath);
-        ExcelDataLoader dataLoader = new ExcelDataLoader();
+        ExcelDataLoader dataLoader = ScriptableObject.CreateInstance<ExcelDataLoader>();
+        dataLoader.Initialize(heroDataFilePath, rateDataFilePaths);
         return dataLoader.LoadStageData(fullPath);
     }
 

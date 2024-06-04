@@ -62,7 +62,6 @@ public class FirestoreManager : MonoBehaviour
             { "atk", hero.atk },
             { "def", hero.def },
             { "hp", hero.hp },
-            { "lead", hero.lead },
             { "spriteName", hero.spriteName },
             { "equip", hero.equip },
             { "description", hero.description }

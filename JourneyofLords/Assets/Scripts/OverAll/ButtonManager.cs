@@ -8,5 +8,4 @@ public class ButtonManager : MonoBehaviour
     // 씬 변환
     public void LoadMainScene() {SceneManager.LoadScene("Main");}
     public void LoadBattleGroundScene() {SceneManager.LoadScene("BattleGround");}
-    public void LoadBattleScene() {SceneManager.LoadScene("Battle");}
 }

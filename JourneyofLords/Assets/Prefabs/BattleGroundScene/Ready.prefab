@@ -603,7 +603,7 @@ MonoBehaviour:
   heroName: {fileID: 4701471840236023239}
   heroATK: {fileID: 8744157361681700449}
   heroDEF: {fileID: 6339602669412545908}
-  heroTroops: {fileID: 1139311691449613149}
+  heroHP: {fileID: 1139311691449613149}
   popupHeroDicPrefab: {fileID: 3206276819780483211, guid: 5a96477ebfe2a814ab9d9a0d92c70786, type: 3}
   selectToggle: {fileID: 561602648381429692}
 --- !u!114 &7097943180273624880

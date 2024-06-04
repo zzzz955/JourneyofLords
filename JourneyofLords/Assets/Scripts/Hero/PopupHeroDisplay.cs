@@ -90,9 +90,9 @@ public class PopupHeroDisplay : MonoBehaviour
         if (hero.sex == "male") sexText.SetText("성별 : 남자");
         if (hero.sex == "female") sexText.SetText("성별 : 여자");
         growthText.SetText("성장 : " + hero.growth);
-        atkText.SetText("공격력 : " + hero.atk);
-        defText.SetText("방어력 : " + hero.def);
-        hpText.SetText("체력 : " + hero.hp);
+        atkText.SetText("공격력 : " + hero.atk.ToString("F0"));
+        defText.SetText("방어력 : " + hero.def.ToString("F0"));
+        hpText.SetText("체력 : " + hero.hp.ToString("F0"));
         etcText.SetText(hero.description);
     }
     

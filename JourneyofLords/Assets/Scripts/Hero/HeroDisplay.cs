@@ -12,7 +12,7 @@ public class HeroDisplay : MonoBehaviour
     public TMP_Text heroName;
     public TMP_Text heroATK;
     public TMP_Text heroDEF;
-    public TMP_Text heroTroops;
+    public TMP_Text heroHP;
     public GameObject popupHeroDicPrefab;
     public Toggle selectToggle; // 체크박스 추가
 
@@ -42,9 +42,9 @@ public class HeroDisplay : MonoBehaviour
         // 텍스트 필드 설정
         if (levelText != null) {levelText.SetText(hero.level.ToString());}
         if (heroName != null) {heroName.SetText(hero.name);}
-        if (heroATK != null) {heroATK.SetText(hero.atk.ToString());}
-        if (heroDEF != null) {heroDEF.SetText(hero.def.ToString());}
-        if (heroTroops != null) {heroTroops.SetText(hero.lead.ToString());}
+        if (heroATK != null) {heroATK.SetText(hero.atk.ToString("F0"));}
+        if (heroDEF != null) {heroDEF.SetText(hero.def.ToString("F0"));}
+        if (heroHP != null) {heroHP.SetText(hero.hp.ToString("F0"));}
 
         // 체크박스 설정
         if (selectToggle != null) {selectToggle.onValueChanged.AddListener(OnToggleValueChanged);}
