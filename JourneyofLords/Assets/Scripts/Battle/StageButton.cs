@@ -34,7 +34,7 @@ public class StageButton : MonoBehaviour
         BattleReadyUI battleReadyUIScript = battleReady.GetComponent<BattleReadyUI>();
         if (battleReadyUIScript != null) {
             if (gameManager.SelectedHeroes.Count != 0) {
-                List<Hero> selected = gameManager.SelectedHeroes;
+                Dictionary<int, Hero> selected = gameManager.SelectedHeroes;
                 if (selected != null) {
                     battleReadyUIScript.DoPlace(selected);
                 }

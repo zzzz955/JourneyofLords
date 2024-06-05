@@ -106,17 +106,34 @@ public class BattleReadyUI : MonoBehaviour
             }
             else
             {
-                gameManager.SelectedHeroes.Add(hero);
+                int index = gameManager.SelectedHeroes.Count;
+                gameManager.SelectedHeroes.Add(index, hero);
             }
         }
         else
         {
-            gameManager.SelectedHeroes.Remove(hero);
+            var key = gameManager.SelectedHeroes.FirstOrDefault(x => x.Value == hero).Key;
+            if (key != default)
+            {
+                gameManager.SelectedHeroes.Remove(key);
+                // 키 값을 다시 0, 1, 2, 3으로 재정렬 (선택 사항)
+                var newSelectedHeroes = gameManager.SelectedHeroes.Values.ToList();
+                gameManager.SelectedHeroes.Clear();
+                for (int i = 0; i < newSelectedHeroes.Count; i++)
+                {
+                    gameManager.SelectedHeroes.Add(i, newSelectedHeroes[i]);
+                }
+            }
         }
     }
 
     public void PlaceAllies()
     {
+        if (gameManager.SelectedHeroes.Count < 4) {
+            for (int i = gameManager.SelectedHeroes.Count; i < 4; i++) {
+                gameManager.SelectedHeroes.Add(i, null);
+            }
+        }
         foreach (Transform child in allyGridParent)
         {
             Destroy(child.gameObject);
@@ -125,36 +142,32 @@ public class BattleReadyUI : MonoBehaviour
         QuitPlaceHeroUI();
     }
 
-    public void DoPlace(List<Hero> selected)
+    public void DoPlace(Dictionary<int, Hero> selected)
     {
-        int gridSize = 4;
-        int totalHeroes = selected.Count;
-
         // 영웅 객체들 배치
-        for (int i = 0; i < totalHeroes; i++)
+        for (int i = 0; i < 4; i++)
         {
-            GameObject allyObject = Instantiate(allyPrefab, allyGridParent);
-            HeroDisplay heroDisplay = allyObject.GetComponent<HeroDisplay>();
-            ClickableHero clickableHero = allyObject.AddComponent<ClickableHero>();
-            DropZone dropZone = allyObject.AddComponent<DropZone>();
+            if (selected[i] != null) {
+                GameObject allyObject = Instantiate(allyPrefab, allyGridParent);
+                HeroDisplay heroDisplay = allyObject.GetComponent<HeroDisplay>();
+                ClickableHero clickableHero = allyObject.AddComponent<ClickableHero>();
+                DropZone dropZone = allyObject.AddComponent<DropZone>();
 
-            if (heroDisplay != null)
-            {
-                heroDisplay.SetHeroData(selected[i]);
+                if (heroDisplay != null)
+                {
+                    heroDisplay.SetHeroData(selected[i]);
+                }
+
+                if (clickableHero != null)
+                {
+                    clickableHero.heroData = selected[i];
+                }
             }
-
-            if (clickableHero != null)
-            {
-                clickableHero.heroData = selected[i];
+            else {
+                GameObject emptyCellObject = Instantiate(emptyCellPrefab, allyGridParent);
+                DropZone dropZone = emptyCellObject.AddComponent<DropZone>();
+                ClickableHero clickableHero = emptyCellObject.AddComponent<ClickableHero>();
             }
-        }
-
-        // 빈 셀로 나머지 그리드 채우기
-        for (int i = totalHeroes; i < gridSize; i++)
-        {
-            GameObject emptyCellObject = Instantiate(emptyCellPrefab, allyGridParent);
-            DropZone dropZone = emptyCellObject.AddComponent<DropZone>();
-            ClickableHero clickableHero = emptyCellObject.AddComponent<ClickableHero>();
         }
     }
 
@@ -164,15 +177,14 @@ public class BattleReadyUI : MonoBehaviour
         if (currentStageData != null)
         {
             List<Enemy> enemies = currentStageData.enemies;
-            int totalEnemies = enemies.Count;
-            for (int i = 0; i < totalEnemies; i++) {
+            for (int i = 0; i < 4; i++) {
                 if (i == enemies[i].position) {
                     GameObject enemyObject = Instantiate(enemyPrefab, enemyGridParent);
                     HeroDisplay heroDisplay = enemyObject.GetComponent<HeroDisplay>();
                     if (heroDisplay != null) {
                         heroDisplay.SetHeroData(enemies[i].hero);
                     }
-                    else {
+                else {
                         GameObject emptyCellObject = Instantiate(emptyCellPrefab, enemyGridParent);
                     }
                 }

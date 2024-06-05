@@ -16,7 +16,7 @@ public class HeroDisplay : MonoBehaviour
     public GameObject popupHeroDicPrefab;
     public Toggle selectToggle; // 체크박스 추가
 
-    private Hero currentHero;
+    public Hero currentHero { get; private set; }
     public System.Action<Hero, bool> OnToggleChanged; // 체크박스 변경 콜백
 
     public void SetHeroData(Hero hero)
