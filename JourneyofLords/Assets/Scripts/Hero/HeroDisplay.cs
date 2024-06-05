@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using System.Linq;
+using System.Collections.Generic;
 
 public class HeroDisplay : MonoBehaviour
 {
@@ -75,5 +77,39 @@ public class HeroDisplay : MonoBehaviour
     private void OnToggleValueChanged(bool isOn)
     {
         OnToggleChanged?.Invoke(currentHero, isOn);
+    }
+
+    public void CheckAndToggleHero(GameManager gameManager)
+    {
+        if (currentHero == null)
+        {
+            Debug.LogWarning("currentHero is null.");
+            return;
+        }
+
+        if (gameManager == null || gameManager.SelectedHeroes == null)
+        {
+            Debug.LogWarning("gameManager or gameManager.SelectedHeroes is null.");
+            return;
+        }
+
+        bool heroExists = gameManager.SelectedHeroes.Any(x => x.Value != null && x.Value.id == currentHero.id);
+
+        if (heroExists)
+        {
+            // selectToggle을 켜서 OnToggleChanged를 호출
+            if (selectToggle != null && !selectToggle.isOn)
+            {
+                selectToggle.isOn = true;
+            }
+        }
+        else
+        {
+            // selectToggle을 꺼서 OnToggleChanged를 호출
+            if (selectToggle != null && selectToggle.isOn)
+            {
+                selectToggle.isOn = false;
+            }
+        }
     }
 }

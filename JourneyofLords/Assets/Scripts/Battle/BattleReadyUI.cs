@@ -19,6 +19,7 @@ public class BattleReadyUI : MonoBehaviour
     public GameObject battleUIPrefab; // 전투 UI 프리팹
 
     private Dictionary<string, GameObject> heroPrefabDictionary;
+    private Dictionary<int, Hero> tempSelectedHeroes = new Dictionary<int, Hero>();
     private FirestoreManager firestoreManager;
     private GameManager gameManager;
     public int currentStage;
@@ -40,10 +41,11 @@ public class BattleReadyUI : MonoBehaviour
 
     public async void ShowPlaceHeroUI()
     {
+        tempSelectedHeroes.Clear();
         HeroList lst = await firestoreManager.GetHeroesData();
         Initialize(lst);
         placeHeroUI.SetActive(true);
-        gameManager.SelectedHeroes.Clear();
+        // gameManager.SelectedHeroes.Clear();
     }
 
     public void QuitPlaceHeroUI()
@@ -79,6 +81,7 @@ public class BattleReadyUI : MonoBehaviour
             heroDisplay.SetHeroData(hero);
             heroDisplay.OnToggleChanged = OnHeroToggleChanged;
             heroPrefabDictionary[hero.id] = heroObject;
+            heroDisplay.CheckAndToggleHero(gameManager);
         }
         else
         {
@@ -98,7 +101,7 @@ public class BattleReadyUI : MonoBehaviour
     {
         if (isOn)
         {
-            if (gameManager.SelectedHeroes.Count >= 4)
+            if (tempSelectedHeroes.Count >= 4)
             {
                 var toggle = heroPrefabDictionary[hero.id].GetComponent<HeroDisplay>().selectToggle;
                 toggle.isOn = false;
@@ -106,22 +109,22 @@ public class BattleReadyUI : MonoBehaviour
             }
             else
             {
-                int index = gameManager.SelectedHeroes.Count;
-                gameManager.SelectedHeroes.Add(index, hero);
+                int index = tempSelectedHeroes.Count;
+                tempSelectedHeroes.Add(index, hero);
             }
         }
         else
         {
-            var key = gameManager.SelectedHeroes.FirstOrDefault(x => x.Value == hero).Key;
+            var key = tempSelectedHeroes.FirstOrDefault(x => x.Value == hero).Key;
             if (key != default)
             {
-                gameManager.SelectedHeroes.Remove(key);
+                tempSelectedHeroes.Remove(key);
                 // 키 값을 다시 0, 1, 2, 3으로 재정렬 (선택 사항)
-                var newSelectedHeroes = gameManager.SelectedHeroes.Values.ToList();
-                gameManager.SelectedHeroes.Clear();
+                var newSelectedHeroes = tempSelectedHeroes.Values.ToList();
+                tempSelectedHeroes.Clear();
                 for (int i = 0; i < newSelectedHeroes.Count; i++)
                 {
-                    gameManager.SelectedHeroes.Add(i, newSelectedHeroes[i]);
+                    tempSelectedHeroes.Add(i, newSelectedHeroes[i]);
                 }
             }
         }
@@ -129,15 +132,16 @@ public class BattleReadyUI : MonoBehaviour
 
     public void PlaceAllies()
     {
-        if (gameManager.SelectedHeroes.Count < 4) {
-            for (int i = gameManager.SelectedHeroes.Count; i < 4; i++) {
-                gameManager.SelectedHeroes.Add(i, null);
+        if (tempSelectedHeroes.Count < 4) {
+            for (int i = tempSelectedHeroes.Count; i < 4; i++) {
+                tempSelectedHeroes.Add(i, null);
             }
         }
         foreach (Transform child in allyGridParent)
         {
             Destroy(child.gameObject);
         }
+        gameManager.SelectedHeroes = tempSelectedHeroes;
         DoPlace(gameManager.SelectedHeroes);
         QuitPlaceHeroUI();
     }

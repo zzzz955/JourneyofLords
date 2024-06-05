@@ -19,7 +19,7 @@ public class GameManager : Singleton<GameManager>
     public User CurrentUser { get; private set; }
     public MainUI MainUI { get; private set; }
     public HeroManager HeroManager { get; private set; }
-    public Dictionary<int, Hero> SelectedHeroes { get; private set; } = new Dictionary<int, Hero>();
+    public Dictionary<int, Hero> SelectedHeroes { get; set; } = new Dictionary<int, Hero>();
     public StageData SelectedStage { get; set; }
 
     private FirestoreManager firestoreManager;
