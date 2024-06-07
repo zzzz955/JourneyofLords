@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UI;
 using UnityEngine;
 
 public class Battle : MonoBehaviour
@@ -15,6 +16,8 @@ public class Battle : MonoBehaviour
 
     private FirestoreManager firestoreManager;
     private GameManager gameManager;
+    private List<UnitStats> allyUnits = new List<UnitStats>();
+    private List<UnitStats> enemyUnits = new List<UnitStats>();
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +54,7 @@ public class Battle : MonoBehaviour
                     {
                         heroDisplay.SetHeroData(selected[i]);
                     }
+                    allyUnits.Add(new UnitStats(selected[i], allyObject));
                 }
             }
             else {
@@ -77,6 +81,7 @@ public class Battle : MonoBehaviour
                         if (heroDisplay != null) {
                             heroDisplay.SetHeroData(enemies[i].hero);
                         }
+                        enemyUnits.Add(new UnitStats(enemies[i].hero, enemyObject));
                     }
                 else {
                         GameObject emptyCellObject = Instantiate(prefabEmpty, enemyGroup);

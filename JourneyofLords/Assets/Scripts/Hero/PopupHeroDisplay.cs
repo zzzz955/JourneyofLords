@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
 
 
 public class PopupHeroDisplay : MonoBehaviour
@@ -99,6 +100,7 @@ public class PopupHeroDisplay : MonoBehaviour
     void OnCloseButtonClick()
     {
         // 팝업 닫기
-        Destroy(gameObject);
+        Canvas parentCanvas = GetComponentInParent<Canvas>();
+        Destroy(parentCanvas.gameObject);
     }
 }

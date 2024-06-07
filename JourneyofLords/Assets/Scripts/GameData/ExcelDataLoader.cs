@@ -161,11 +161,7 @@ public class ExcelDataLoader : ScriptableObject
                                 description = baseHero.description
                             };
 
-                            Enemy enemy = new Enemy
-                            {
-                                position = enemyIndex,
-                                hero = enemyHero
-                            };
+                            Enemy enemy = new Enemy(enemyIndex, enemyHero);
 
                             if (!stageDictionary.ContainsKey(stageLevel))
                             {

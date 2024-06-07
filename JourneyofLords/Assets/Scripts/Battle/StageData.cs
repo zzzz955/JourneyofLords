@@ -18,4 +18,10 @@ public class Enemy
 {
     public int position;
     public Hero hero;
+
+    public Enemy(int position, Hero hero)
+    {
+        this.position = position;
+        this.hero = hero;
+    }
 }
