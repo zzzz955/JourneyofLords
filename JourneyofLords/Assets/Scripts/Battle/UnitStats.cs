@@ -1,23 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
-public class UnitStats
+public class UnitStats : MonoBehaviour
 {
     public Hero hero;
-    public GameObject unitObject;
     public float atk;
     public float def;
     public float hp;
     public float maxHP;
+    public TMP_Text currentHP;
+    public Slider currentHPBar;
 
-    public UnitStats(Hero hero, GameObject unitObject)
+    public void Initialize(Hero hero)
     {
-        this.hero = hero;
-        this.unitObject = unitObject;
-        this.atk = hero.atk;
-        this.def = hero.def;
-        this.hp = hero.hp;
-        this.maxHP = hp;
+        atk = hero.atk;
+        def = hero.def;
+        hp = hero.hp;
+        maxHP = hp;
+        UpdateHealthUI();
     }
+
+    private void UpdateHealthUI () {
+        currentHP.SetText(hp.ToString("F0"));
+        currentHPBar.value = hp / maxHP;
+    }
+
+    public void TakeDamage(float damage) {
+        hp -= damage;
+        if (hp < 0) hp = 0;
+        UpdateHealthUI();
+    }
+
+
 }

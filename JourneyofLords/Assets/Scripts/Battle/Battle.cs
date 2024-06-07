@@ -49,12 +49,14 @@ public class Battle : MonoBehaviour
                         new Vector3(-1.8f * i - 2, -1, -1), 
                         Quaternion.identity);
                     HeroDisplay heroDisplay = allyHero.GetComponent<HeroDisplay>();
+                    UnitStats unitStats = allyObject.GetComponent<UnitStats>();
+                    unitStats.Initialize(selected[i]);
 
                     if (heroDisplay != null)
                     {
                         heroDisplay.SetHeroData(selected[i]);
                     }
-                    allyUnits.Add(new UnitStats(selected[i], allyObject));
+                    allyUnits.Add(unitStats);
                 }
             }
             else {
@@ -78,10 +80,12 @@ public class Battle : MonoBehaviour
                             new Vector3(1.8f * i + 2, -1, -1), 
                             Quaternion.identity);
                         HeroDisplay heroDisplay = enemyHero.GetComponent<HeroDisplay>();
+                        UnitStats unitStats = enemyObject.GetComponent<UnitStats>();
+                        unitStats.Initialize(enemies[i].hero);
                         if (heroDisplay != null) {
                             heroDisplay.SetHeroData(enemies[i].hero);
                         }
-                        enemyUnits.Add(new UnitStats(enemies[i].hero, enemyObject));
+                        enemyUnits.Add(unitStats);
                     }
                 else {
                         GameObject emptyCellObject = Instantiate(prefabEmpty, enemyGroup);
