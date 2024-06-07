@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stageText: {fileID: 6565706846758300342}
-  battleReadyUIPrefab: {fileID: 3042313187052476900, guid: 6260073f3f82c674e8d115ec3e478393, type: 3}
+  battleReadyUIPrefab: {fileID: 3042313187052476900, guid: 41366a51a4d7abe4e90b4a6ea3da4f9f, type: 3}
 --- !u!114 &5831978742327476848
 MonoBehaviour:
   m_ObjectHideFlags: 0

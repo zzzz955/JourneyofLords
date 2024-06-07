@@ -1477,7 +1477,7 @@ MonoBehaviour:
   allyGridParent: {fileID: 4290079764670530772}
   enemyGridParent: {fileID: 5318189184680008521}
   startBattleButton: {fileID: 844690577664351361}
-  battleUIPrefab: {fileID: 4397854162185960780, guid: 95a518e675f19694b900c00edb2ddba0, type: 3}
+  battleUIPrefab: {fileID: 1322174485910654951, guid: f3b82fdd9555ab84f92d50a2c9327ecd, type: 3}
   currentStage: 0
 --- !u!114 &6321723984900321355
 MonoBehaviour:

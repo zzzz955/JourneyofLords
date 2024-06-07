@@ -1303,7 +1303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc1c04167a2b4f840b5e0c4cdaa524b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heroPrefab: {fileID: 5987963689304983169, guid: 322b59360a94ec6429d856df3239e2a7, type: 3}
+  heroPrefab: {fileID: 5987963689304983169, guid: b2d0ba892e6c9a74aba55d0afda4dc09, type: 3}
   recruitHeroPrefab: {fileID: 5987963689304983169, guid: bbd623ece81e8ca439e732089d32679b, type: 3}
   parentTransform: {fileID: 7393394018832798548}
   parentTransformDic: {fileID: 9877869849130941}
