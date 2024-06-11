@@ -348,6 +348,8 @@ MonoBehaviour:
   maxHP: 0
   currentHP: {fileID: 5687865950934769604}
   currentHPBar: {fileID: 4680192593413559155}
+  hitDamagePrefab: {fileID: 89639313111048832, guid: d603ff2be5e86dd4ba259e08858cd527, type: 3}
+  unitCanvas: {fileID: 2611669069519577408}
 --- !u!1 &6483402925546753180
 GameObject:
   m_ObjectHideFlags: 0
@@ -707,7 +709,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &7924457214433942879
 MonoBehaviour:

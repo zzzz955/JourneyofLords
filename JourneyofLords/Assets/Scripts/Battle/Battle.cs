@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.UI;
 using UnityEngine;
+using UnityEngine.Rendering;
+using System.Linq;
+using Unity.VisualScripting;
 
 public class Battle : MonoBehaviour
 {
@@ -16,6 +19,8 @@ public class Battle : MonoBehaviour
 
     private FirestoreManager firestoreManager;
     private GameManager gameManager;
+    private List<GameObject> allyHeroes = new List<GameObject>();
+    private List<GameObject> enemyHeroes = new List<GameObject>();
     private List<UnitStats> allyUnits = new List<UnitStats>();
     private List<UnitStats> enemyUnits = new List<UnitStats>();
 
@@ -28,6 +33,7 @@ public class Battle : MonoBehaviour
         {
             Debug.LogError("FirestoreManager not found in the scene.");
         }
+        StartCoroutine(BattleCoroutine());
     }
 
     // Update is called once per frame
@@ -57,10 +63,12 @@ public class Battle : MonoBehaviour
                         heroDisplay.SetHeroData(selected[i]);
                     }
                     allyUnits.Add(unitStats);
+                    allyHeroes.Add(allyHero);
                 }
             }
             else {
                 GameObject emptyCellObject = Instantiate(prefabEmpty, allyGroup);
+                allyUnits.Add(null);
             }
         }
     }
@@ -86,9 +94,57 @@ public class Battle : MonoBehaviour
                             heroDisplay.SetHeroData(enemies[i].hero);
                         }
                         enemyUnits.Add(unitStats);
+                        enemyHeroes.Add(enemyHero);
                     }
                 else {
                         GameObject emptyCellObject = Instantiate(prefabEmpty, enemyGroup);
+                        enemyUnits.Add(null);
+                    }
+                }
+            }
+        }
+    }
+
+    private IEnumerator BattleCoroutine() {
+        while (allyUnits.Any(unit => unit != null) && enemyUnits.Any(unit => unit != null)) {
+            for (int i = 0; i < 4; i++) {
+                if (allyUnits[i] != null) {
+                    UnitStats allyUnitStats = allyUnits[i].GetComponent<UnitStats>();
+                    for (int j = 0; j < 4; j++) {
+                        if (enemyUnits[j] != null) {
+                            UnitStats enemyUnitStats = enemyUnits[j].GetComponent<UnitStats>();
+                            float damage = allyUnitStats.atk - enemyUnitStats.def;
+                            if (damage < 0) {
+                                damage = enemyUnitStats.maxHP * 0.01f;
+                            }
+                            enemyUnitStats.TakeDamage(damage);
+                            if (enemyUnitStats.hp <= 0) {
+                                Destroy(enemyUnits[j].gameObject);
+                                enemyUnits[j] = null;
+                            }
+                            yield return new WaitForSeconds(1f);
+                            break;
+                        }
+                    }
+                }
+
+                if (enemyUnits[i] != null) {
+                    UnitStats enemyUnitStats = enemyUnits[i].GetComponent<UnitStats>();
+                    for (int j = 0; j < 4; j++) {
+                        if (allyUnits[j] != null) {
+                            UnitStats allyUnitStats = allyUnits[j].GetComponent<UnitStats>();
+                            float damage = enemyUnitStats.atk - allyUnitStats.def;
+                            if (damage < 0) {
+                                damage = allyUnitStats.maxHP * 0.01f;
+                            }
+                            allyUnitStats.TakeDamage(damage);
+                            if (allyUnitStats.hp <= 0) {
+                                Destroy(allyUnits[j].gameObject);
+                                allyUnits[j] = null;
+                            }
+                            yield return new WaitForSeconds(1f);
+                            break;
+                        }
                     }
                 }
             }
