@@ -16,6 +16,8 @@ public class Battle : MonoBehaviour
     public GameObject prefabEnemyMale;
     public GameObject prefabEnemyFemale;
     public GameObject prefabEmpty;
+    public GameObject panelVictory;
+    public GameObject panelDefeat;
 
     private FirestoreManager firestoreManager;
     private GameManager gameManager;
@@ -52,9 +54,8 @@ public class Battle : MonoBehaviour
                     HeroDisplay heroDisplay = allyHero.GetComponent<HeroDisplay>();
                     UnitStats unitStats = allyObject.GetComponent<UnitStats>();
                     Unit unit = allyObject.AddComponent<Unit>();
-                    unit.Initialize(new BasicDamageStrategy(), new FrontTargetStrategy());
-
                     unitStats.Initialize(selected[i]);
+                    unit.Initialize(selected[i]); // 영웅의 인덱스에 따라 전략 설정
 
                     if (heroDisplay != null)
                     {
@@ -94,9 +95,8 @@ public class Battle : MonoBehaviour
                         HeroDisplay heroDisplay = enemyHero.GetComponent<HeroDisplay>();
                         UnitStats unitStats = enemyObject.GetComponent<UnitStats>();
                         Unit unit = enemyObject.AddComponent<Unit>();
-                        unit.Initialize(new BasicDamageStrategy(), new FrontTargetStrategy());
-
                         unitStats.Initialize(enemies[i].hero);
+                        unit.Initialize(enemies[i].hero); // 영웅의 인덱스에 따라 전략 설정
 
                         if (heroDisplay != null)
                         {
@@ -124,53 +124,74 @@ public class Battle : MonoBehaviour
                 if (allyUnits[i] != null)
                 {
                     Unit allyUnit = allyUnits[i].GetComponent<Unit>();
+                    allyUnit.StartTurn(); // 턴 시작
                     yield return StartCoroutine(PerformAttack(allyUnit, enemyUnits, true)); // 아군이 적군을 공격
                 }
 
                 if (enemyUnits[i] != null)
                 {
                     Unit enemyUnit = enemyUnits[i].GetComponent<Unit>();
+                    enemyUnit.StartTurn(); // 턴 시작
                     yield return StartCoroutine(PerformAttack(enemyUnit, allyUnits, false)); // 적군이 아군을 공격
                 }
             }
         }
+        yield return new WaitForSeconds(1f);
+        if (allyUnits.Any(unit => unit != null))
+        {
+            panelVictory.SetActive(true);
+        }
+        else
+        {
+            panelDefeat.SetActive(true);
+        }
+        ClearUnits(allyUnits);
+        ClearUnits(enemyUnits);
+
+        ResetUnits(allyUnits);
+        ResetUnits(enemyUnits);
     }
 
     private IEnumerator PerformAttack(Unit attacker, List<UnitStats> enemyUnits, bool isAlly)
     {
-        UnitStats target = attacker.TargetStrategy.SelectTarget(enemyUnits.ToArray()); // 배열로 변환
-        if (target != null)
+        List<UnitStats> targets = attacker.TargetStrategy.SelectTargets(enemyUnits.ToArray());
+
+        foreach (UnitStats target in targets)
         {
-            Vector3 startPos = attacker.transform.position;
-            Vector3 endPos;
-            if (isAlly)
+            if (target != null)
             {
-                endPos = new Vector3(target.transform.position.x - 1, startPos.y, startPos.z);
-            }
-            else
-            {
-                endPos = new Vector3(target.transform.position.x + 1, startPos.y, startPos.z);
-            }
-            yield return StartCoroutine(MoveOverTime(attacker.transform, endPos, 0.5f));
-
-            attacker.Attack(enemyUnits.ToArray()); // 배열로 변환
-            yield return new WaitForSeconds(1f);
-
-            if (target.hp <= 0)
-            {
-                Destroy(target.gameObject);
-                // 해당 유닛 리스트에서 null로 설정
-                for (int i = 0; i < enemyUnits.Count; i++)
+                Vector3 startPos = attacker.transform.position;
+                Vector3 endPos;
+                if (isAlly)
                 {
-                    if (enemyUnits[i] == target)
+                    endPos = new Vector3(target.transform.position.x - 1, startPos.y, startPos.z);
+                }
+                else
+                {
+                    endPos = new Vector3(target.transform.position.x + 1, startPos.y, startPos.z);
+                }
+                yield return StartCoroutine(MoveOverTime(attacker.transform, endPos, 0.5f));
+
+                // 개별 공격 수행
+                attacker.Attack(new UnitStats[] { target });
+                yield return new WaitForSeconds(1f);
+
+                if (target.hp <= 0)
+                {
+                    Destroy(target.gameObject);
+                    // 해당 유닛 리스트에서 null로 설정
+                    for (int i = 0; i < enemyUnits.Count; i++)
                     {
-                        enemyUnits[i] = null;
-                        break;
+                        if (enemyUnits[i] == target)
+                        {
+                            enemyUnits[i] = null;
+                            break;
+                        }
                     }
                 }
-            }
 
-            yield return StartCoroutine(MoveOverTime(attacker.transform, startPos, 0.5f));
+                yield return StartCoroutine(MoveOverTime(attacker.transform, startPos, 0.5f));
+            }
         }
     }
 
@@ -186,5 +207,32 @@ public class Battle : MonoBehaviour
             yield return null;
         }
         target.position = endPos;
+    }
+
+    private void ClearUnits(List<UnitStats> units)
+    {
+        foreach (var unit in units)
+        {
+            if (unit != null)
+            {
+                Destroy(unit.gameObject);
+            }
+        }
+        units.Clear();
+    }
+
+    private void ResetUnits(List<UnitStats> units)
+    {
+        foreach (var unit in units)
+        {
+            if (unit != null)
+            {
+                unit.GetComponent<Unit>().Initialize(unit.hero); // 유닛 상태 재초기화
+            }
+        }
+    }
+
+    public void BattleOut() {
+        Destroy(gameObject);
     }
 }

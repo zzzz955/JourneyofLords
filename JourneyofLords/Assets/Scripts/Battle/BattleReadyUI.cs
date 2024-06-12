@@ -197,10 +197,11 @@ public class BattleReadyUI : MonoBehaviour
     }
 
     public void TempStageClear() {
-        GameObject gameObject = Instantiate(battleUIPrefab, transform.parent);
-        Battle battle = gameObject.GetComponent<Battle>();
+        GameObject battleIn = Instantiate(battleUIPrefab, transform.parent);
+        Battle battle = battleIn.GetComponent<Battle>();
         battle.CreateAlly(gameManager.SelectedHeroes);
         battle.CreateEnemy(currentStage);
+        Destroy(gameObject);
         // GameObject stageManagerObject = GameObject.Find("StageManager");
         // if (stageManagerObject != null) {
         //     StageManager stageManager = stageManagerObject.GetComponent<StageManager>();
