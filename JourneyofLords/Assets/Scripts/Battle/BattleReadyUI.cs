@@ -79,9 +79,9 @@ public class BattleReadyUI : MonoBehaviour
         if (heroDisplay != null)
         {
             heroDisplay.SetHeroData(hero);
+            heroDisplay.CheckAndToggleHero(gameManager);
             heroDisplay.OnToggleChanged = OnHeroToggleChanged;
             heroPrefabDictionary[hero.id] = heroObject;
-            heroDisplay.CheckAndToggleHero(gameManager);
         }
         else
         {
@@ -119,7 +119,7 @@ public class BattleReadyUI : MonoBehaviour
             if (key != default)
             {
                 tempSelectedHeroes.Remove(key);
-                // 키 값을 다시 0, 1, 2, 3으로 재정렬 (선택 사항)
+                // 키 값을 다시 0, 1, 2, 3으로 재정렬
                 var newSelectedHeroes = tempSelectedHeroes.Values.ToList();
                 tempSelectedHeroes.Clear();
                 for (int i = 0; i < newSelectedHeroes.Count; i++)

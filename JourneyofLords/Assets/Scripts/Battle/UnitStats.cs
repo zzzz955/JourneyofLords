@@ -16,12 +16,9 @@ public class UnitStats : MonoBehaviour
     public GameObject hitDamagePrefab;
     public Canvas unitCanvas;
 
-    void Start() {
-
-    }
-
     public void Initialize(Hero hero)
     {
+        this.hero = hero;
         atk = hero.atk;
         def = hero.def;
         hp = hero.hp;
@@ -44,10 +41,8 @@ public class UnitStats : MonoBehaviour
     private void ShowDamage(float damage)
     {
         GameObject damageText = Instantiate(hitDamagePrefab, unitCanvas.transform);
-
         TMP_Text damageTextTMP = damageText.GetComponent<TMP_Text>();
         damageTextTMP.text = damage.ToString("F0");
-
         StartCoroutine(AnimateDamageText(damageText));
     }
 
