@@ -7,8 +7,10 @@ public class Unit : MonoBehaviour {
     private int turnCounter = 0;
     private IDamageStrategy initialDamageStrategy;
     private ITargetStrategy initialTargetStrategy;
+    private Hero currentHero;
 
     public void Initialize(Hero hero) {
+        currentHero = hero;
         turnCounter = 0; // 턴 카운터 초기화
         switch (hero.index) {
             case 30:
@@ -59,10 +61,17 @@ public class Unit : MonoBehaviour {
 
     public void StartTurn() {
         turnCounter++;
-        if (turnCounter > 1) {
-            // 첫 번째 턴 이후 기본 전략으로 변경
-            DamageStrategy = new BasicDamageStrategy();
-            TargetStrategy = new FrontTargetStrategy();
+        switch (currentHero.index) {
+            case 60:
+            case 61:
+            case 62:
+                if (turnCounter > 1) {
+                DamageStrategy = new BasicDamageStrategy();
+                TargetStrategy = new FrontTargetStrategy();
+                }
+                break;
+            default:
+                break;
         }
     }
 

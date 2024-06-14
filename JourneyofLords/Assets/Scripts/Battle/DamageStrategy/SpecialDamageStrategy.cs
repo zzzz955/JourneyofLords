@@ -8,7 +8,7 @@ public class SpecialDamageStrategy : IDamageStrategy {
     }
 
     public float CalculateDamage(UnitStats attacker, UnitStats defender) {
-        float damage = attacker.atk * damageMultiplier - defender.def;
+        float damage = (attacker.atk - defender.def) * damageMultiplier ;
         return Mathf.Max(defender.maxHP * 0.01f, damage);
     }
 }

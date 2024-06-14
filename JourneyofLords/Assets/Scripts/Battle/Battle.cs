@@ -25,6 +25,8 @@ public class Battle : MonoBehaviour
     private List<GameObject> enemyHeroes = new List<GameObject>();
     private List<UnitStats> allyUnits = new List<UnitStats>();
     private List<UnitStats> enemyUnits = new List<UnitStats>();
+    private List<UnitStats> tempAllyUnits = new List<UnitStats>();
+    private List<UnitStats> tempEnemyUnits = new List<UnitStats>();
 
     void Start()
     {
@@ -62,6 +64,7 @@ public class Battle : MonoBehaviour
                         heroDisplay.SetHeroData(selected[i]);
                     }
                     allyUnits.Add(unitStats);
+                    tempAllyUnits.Add(unitStats);
                     allyHeroes.Add(allyHero);
                 }
             }
@@ -69,6 +72,7 @@ public class Battle : MonoBehaviour
             {
                 GameObject emptyCellObject = Instantiate(prefabEmpty, allyGroup);
                 allyUnits.Add(null);
+                tempAllyUnits.Add(null);
             }
         }
     }
@@ -103,12 +107,14 @@ public class Battle : MonoBehaviour
                             heroDisplay.SetHeroData(enemies[i].hero);
                         }
                         enemyUnits.Add(unitStats);
+                        tempEnemyUnits.Add(unitStats);
                         enemyHeroes.Add(enemyHero);
                     }
                     else
                     {
                         GameObject emptyCellObject = Instantiate(prefabEmpty, enemyGroup);
                         enemyUnits.Add(null);
+                        tempEnemyUnits.Add(null);
                     }
                 }
             }
@@ -148,8 +154,8 @@ public class Battle : MonoBehaviour
         ClearUnits(allyUnits);
         ClearUnits(enemyUnits);
 
-        ResetUnits(allyUnits);
-        ResetUnits(enemyUnits);
+        ResetUnits(tempAllyUnits);
+        ResetUnits(tempEnemyUnits);
     }
 
     private IEnumerator PerformAttack(Unit attacker, List<UnitStats> enemyUnits, bool isAlly)
