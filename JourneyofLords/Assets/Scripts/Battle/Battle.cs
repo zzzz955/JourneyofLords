@@ -18,6 +18,8 @@ public class Battle : MonoBehaviour
     public GameObject prefabEmpty;
     public GameObject panelVictory;
     public GameObject panelDefeat;
+    
+    public int stageIndex;
 
     private FirestoreManager firestoreManager;
     private GameManager gameManager;
@@ -146,6 +148,11 @@ public class Battle : MonoBehaviour
         if (allyUnits.Any(unit => unit != null))
         {
             panelVictory.SetActive(true);
+            GameObject stageManagerObject = GameObject.Find("StageManager");
+            if (stageManagerObject != null) {
+                StageManager stageManager = stageManagerObject.GetComponent<StageManager>();
+                stageManager.StageCleared(stageIndex);
+        }
         }
         else
         {
@@ -160,45 +167,45 @@ public class Battle : MonoBehaviour
 
     private IEnumerator PerformAttack(Unit attacker, List<UnitStats> enemyUnits, bool isAlly)
     {
-        List<UnitStats> targets = attacker.TargetStrategy.SelectTargets(enemyUnits.ToArray());
-
-        foreach (UnitStats target in targets)
-        {
-            if (target != null)
+        Vector3 startPos = attacker.transform.position;
+        for (int i = 0; i < attacker.initialAttackCount; i++) {
+            List<UnitStats> targets = attacker.TargetStrategy.SelectTargets(enemyUnits.ToArray());
+            foreach (UnitStats target in targets)
             {
-                Vector3 startPos = attacker.transform.position;
-                Vector3 endPos;
-                if (isAlly)
+                if (target != null)
                 {
-                    endPos = new Vector3(target.transform.position.x - 1, startPos.y, startPos.z);
-                }
-                else
-                {
-                    endPos = new Vector3(target.transform.position.x + 1, startPos.y, startPos.z);
-                }
-                yield return StartCoroutine(MoveOverTime(attacker.transform, endPos, 0.5f));
-
-                // 개별 공격 수행
-                attacker.Attack(new UnitStats[] { target });
-                yield return new WaitForSeconds(1f);
-
-                if (target.hp <= 0)
-                {
-                    Destroy(target.gameObject);
-                    // 해당 유닛 리스트에서 null로 설정
-                    for (int i = 0; i < enemyUnits.Count; i++)
+                    Vector3 endPos;
+                    if (isAlly)
                     {
-                        if (enemyUnits[i] == target)
+                        endPos = new Vector3(target.transform.position.x - 1, startPos.y, startPos.z);
+                    }
+                    else
+                    {
+                        endPos = new Vector3(target.transform.position.x + 1, startPos.y, startPos.z);
+                    }
+                    yield return StartCoroutine(MoveOverTime(attacker.transform, endPos, 0.5f));
+
+                    // 개별 공격 수행
+                    attacker.Attack(new UnitStats[] { target });
+                    yield return new WaitForSeconds(1f);
+
+                    if (target.hp <= 0)
+                    {
+                        Destroy(target.gameObject);
+                        // 해당 유닛 리스트에서 null로 설정
+                        for (int j = 0; j < enemyUnits.Count; j++)
                         {
-                            enemyUnits[i] = null;
-                            break;
+                            if (enemyUnits[i] == target)
+                            {
+                                enemyUnits[i] = null;
+                                break;
+                            }
                         }
                     }
                 }
-
-                yield return StartCoroutine(MoveOverTime(attacker.transform, startPos, 0.5f));
             }
         }
+        yield return StartCoroutine(MoveOverTime(attacker.transform, startPos, 0.5f));
     }
 
     private IEnumerator MoveOverTime(Transform target, Vector3 endPos, float duration)

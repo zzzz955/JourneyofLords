@@ -32,10 +32,18 @@ public class UnitStats : MonoBehaviour
     }
 
     public void TakeDamage(float damage) {
-        hp -= damage;
-        if (hp < 0) hp = 0;
+        if (hp - damage <= 0) {
+            damage = hp;
+            hp = 0;
+        } else {
+            hp -= damage;
+        }
         ShowDamage(damage);
         UpdateHealthUI();
+    }
+
+    public bool isDead() {
+        return hp <= 0;
     }
 
     private void ShowDamage(float damage)

@@ -196,17 +196,12 @@ public class BattleReadyUI : MonoBehaviour
         }
     }
 
-    public void TempStageClear() {
+    public void StartBattle() {
         GameObject battleIn = Instantiate(battleUIPrefab, transform.parent);
         Battle battle = battleIn.GetComponent<Battle>();
         battle.CreateAlly(gameManager.SelectedHeroes);
         battle.CreateEnemy(currentStage);
+        battle.stageIndex = currentStage;
         Destroy(gameObject);
-        // GameObject stageManagerObject = GameObject.Find("StageManager");
-        // if (stageManagerObject != null) {
-        //     StageManager stageManager = stageManagerObject.GetComponent<StageManager>();
-        //     stageManager.StageCleared(currentStage);
-        //     Destroy(gameObject);
-        // }
     }
 }
