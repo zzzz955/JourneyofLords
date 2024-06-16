@@ -15,8 +15,15 @@ public class HeroDisplay : MonoBehaviour
     public TMP_Text heroATK;
     public TMP_Text heroDEF;
     public TMP_Text heroHP;
+    public GameObject atkBonusPrefab;
+    public GameObject defBonusPrefab;
+    public GameObject hpBonusPrefab;
     public GameObject popupHeroDicPrefab;
     public Toggle selectToggle; // 체크박스 추가
+
+    private GameObject atkBonusObject;
+    private GameObject defBonusObject;
+    private GameObject hpBonusObject;
 
     public Hero currentHero { get; private set; }
     public System.Action<Hero, bool> OnToggleChanged; // 체크박스 변경 콜백
@@ -50,6 +57,19 @@ public class HeroDisplay : MonoBehaviour
 
         // 체크박스 설정
         if (selectToggle != null) {selectToggle.onValueChanged.AddListener(OnToggleValueChanged);}
+
+        if (atkBonusPrefab != null) {
+            atkBonusObject = Instantiate(atkBonusPrefab, transform);
+            atkBonusObject.transform.localPosition = new Vector3(0, -100, 0);
+        }
+        if (defBonusPrefab != null) {
+            defBonusObject = Instantiate(defBonusPrefab, transform);
+            defBonusObject.transform.localPosition = new Vector3(0, -155, 0);
+        }
+        if (hpBonusPrefab != null) {
+            hpBonusObject = Instantiate(hpBonusPrefab, transform);
+            hpBonusObject.transform.localPosition = new Vector3(0, -210, 0);
+        }
     }
 
     public Hero GetHero()
@@ -77,7 +97,6 @@ public class HeroDisplay : MonoBehaviour
         canvasScaler.matchWidthOrHeight = 0.5f; // 원하는 스크린 맞춤 비율 설정
 
         GameObject popup = Instantiate(popupHeroDicPrefab, newCanvasObject.transform); // 부모를 설정 (메인 캔버스 또는 루트)
-        // popup.transform.SetParent(transform.root, false); // 메인 캔버스의 자식으로 설정
         PopupHeroDisplay popupHeroDisplay = popup.GetComponent<PopupHeroDisplay>();
 
         if (popupHeroDisplay != null)
@@ -126,6 +145,31 @@ public class HeroDisplay : MonoBehaviour
             {
                 selectToggle.isOn = false;
             }
+        }
+    }
+
+    public void UpdateStats(float newAtk, float newDef, float newHP, float atkBonusPercentage, float defBonusPercentage, float hpBonusPercentage)
+    {
+        currentHero.atk = newAtk;
+        currentHero.def = newDef;
+        currentHero.hp = newHP;
+        
+        if (atkBonusObject != null)
+        {
+            TMP_Text atkBonusText = atkBonusObject.GetComponentInChildren<TMP_Text>();
+            if (atkBonusText != null) { atkBonusText.SetText($"+{atkBonusPercentage:F2}%"); }
+        }
+
+        if (defBonusObject != null)
+        {
+            TMP_Text defBonusText = defBonusObject.GetComponentInChildren<TMP_Text>();
+            if (defBonusText != null) { defBonusText.SetText($"+{defBonusPercentage:F2}%"); }
+        }
+
+        if (hpBonusObject != null)
+        {
+            TMP_Text hpBonusText = hpBonusObject.GetComponentInChildren<TMP_Text>();
+            if (hpBonusText != null) { hpBonusText.SetText($"+{hpBonusPercentage:F2}%"); }
         }
     }
 }

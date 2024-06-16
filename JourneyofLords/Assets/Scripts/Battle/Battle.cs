@@ -30,6 +30,16 @@ public class Battle : MonoBehaviour
     private List<UnitStats> tempAllyUnits = new List<UnitStats>();
     private List<UnitStats> tempEnemyUnits = new List<UnitStats>();
 
+    private float atkBouns;
+    private float defBouns;
+    private float hpBouns;
+
+    void Awake() {
+        atkBouns = 1.00f;
+        defBouns = 1.00f;
+        hpBouns = 1.00f;
+    }
+
     void Start()
     {
         firestoreManager = FindObjectOfType<FirestoreManager>();
@@ -75,8 +85,10 @@ public class Battle : MonoBehaviour
                 GameObject emptyCellObject = Instantiate(prefabEmpty, allyGroup);
                 allyUnits.Add(null);
                 tempAllyUnits.Add(null);
+                allyHeroes.Add(null);
             }
         }
+        IncreaseAllyStats(atkBouns, defBouns, hpBouns);
     }
 
     public void CreateEnemy(int currentStageLevel)
@@ -117,7 +129,37 @@ public class Battle : MonoBehaviour
                         GameObject emptyCellObject = Instantiate(prefabEmpty, enemyGroup);
                         enemyUnits.Add(null);
                         tempEnemyUnits.Add(null);
+                        enemyHeroes.Add(null);
                     }
+                }
+            }
+        }
+    }
+
+    public void BonusUpdate(float atkPercentage, float defPercentage, float hpPercentage) {
+        atkBouns += atkPercentage;
+        defBouns += defPercentage;
+        hpBouns += hpPercentage;
+    }
+
+    public void IncreaseAllyStats(float atkPercentage, float defPercentage, float hpPercentage)
+    {
+        for (int i = 0; i < allyUnits.Count; i++)
+        {
+            var allyUnit = allyUnits[i];
+            var allyHero = allyHeroes[i];
+
+            if (allyUnit != null)
+            {
+                allyUnit.IncreaseStats(atkPercentage, defPercentage, hpPercentage);
+            }
+
+            if (allyHero != null)
+            {
+                var heroDisplay = allyHero.GetComponent<HeroDisplay>();
+                if (heroDisplay != null)
+                {
+                    heroDisplay.UpdateStats(allyUnit.atk, allyUnit.def, allyUnit.hp, (atkBouns - 1) * 100, (defBouns - 1) * 100, (hpBouns - 1) * 100);
                 }
             }
         }

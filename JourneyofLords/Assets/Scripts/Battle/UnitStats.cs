@@ -11,9 +11,17 @@ public class UnitStats : MonoBehaviour
     public float def;
     public float hp;
     public float maxHP;
+
+    public float atkBonus = 1.00f;
+    public float defBonus = 1.00f;
+    public float hpBonus = 1.00f;
+    public float damageReduce = 1.00f;
+
     public TMP_Text currentHP;
     public Slider currentHPBar;
     public GameObject hitDamagePrefab;
+    public Transform stackBar;
+    public GameObject stack;
     public Canvas unitCanvas;
 
     public void Initialize(Hero hero)
@@ -32,6 +40,7 @@ public class UnitStats : MonoBehaviour
     }
 
     public void TakeDamage(float damage) {
+        damage *= damageReduce;
         if (hp - damage <= 0) {
             damage = hp;
             hp = 0;
@@ -69,5 +78,20 @@ public class UnitStats : MonoBehaviour
         }
 
         Destroy(damageText);
+    }
+
+    public void IncreaseStats(float atkPercentage, float defPercentage, float hpPercentage)
+    {
+        atk *= atkPercentage;
+        def *= defPercentage;
+        hp *= hpPercentage;
+        maxHP = hp;
+        UpdateHealthUI();
+    }
+
+    public void TurnBasedIncreaseStats(float atkPercentage, float defPercentage, float hpPercentage) {
+        atk *= atkPercentage;
+        def *= defPercentage;
+        GameObject stackEffect = Instantiate(stack, stackBar);
     }
 }
