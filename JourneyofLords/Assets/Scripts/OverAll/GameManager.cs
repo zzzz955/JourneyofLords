@@ -9,13 +9,17 @@ using TMPro;
 
 public class GameManager : Singleton<GameManager>
 {
-    public string heroDataFilePath = "Scripts/GameData/HeroData.xlsx"; // 상대 경로로 설정
-    public string[] rateDataFilePaths = { "Scripts/GameData/HeroRecruit1.xlsx", "Scripts/GameData/HeroRecruit2.xlsx", "Scripts/GameData/HeroRecruit3.xlsx" }; // 상대 경로로 설정
+    public string heroDataFilePath = "Scripts/GameData/HeroData.xlsx";
+    public string[] rateDataFilePaths = { "Scripts/GameData/HeroRecruit1.xlsx", "Scripts/GameData/HeroRecruit2.xlsx", "Scripts/GameData/HeroRecruit3.xlsx" };
     public string stageDataFilePath = "Scripts/GameData/StageData.xlsx";
+    public string levelDataFilePath = "Scripts/GameData/levelData.xlsx";
+    public string stageEXPFilePath = "Scripts/GameData/stageEXP.xlsx";
 
     public HeroList HeroList { get; private set; }
     public List<List<HeroRate>> HeroRatesList { get; private set; }
     public List<StageData> StageDataList { get; private set; }
+    public List<LevelData> levelDataList { get; private set; }
+    public List<StageEXP> stageEXPList { get; private set; }
     public User CurrentUser { get; private set; }
     public MainUI MainUI { get; private set; }
     public HeroManager HeroManager { get; private set; }
@@ -62,34 +66,32 @@ public class GameManager : Singleton<GameManager>
 
     public void OnHeroesLoaded()
     {
-        Debug.Log("OnHeroesLoaded called");
-
         HeroManager heroManager = FindObjectOfType<HeroManager>();
         if (heroManager != null)
         {
             if (CurrentUser != null)
             {
-                Debug.Log("CurrentUser.maxHeroes: " + CurrentUser.maxHeroes);
                 heroManager.MaxInitialize(CurrentUser.maxHeroes);
-            }
-            else
-            {
-                Debug.LogError("CurrentUser is null in OnHeroesLoaded");
             }
             heroManager.SetHeroList(HeroList);
             heroManager.SetHeroRatesList(HeroRatesList);
-        }
-        else
-        {
-            Debug.LogError("HeroManager is null in OnHeroesLoaded");
         }
     }
 
     private void LoadAllData()
     {
-        HeroList = LoadHeroData(heroDataFilePath);
-        HeroRatesList = LoadHeroRates(rateDataFilePaths);
-        StageDataList = LoadStageData(stageDataFilePath);
+        ExcelDataLoader dataLoader = ScriptableObject.CreateInstance<ExcelDataLoader>();
+        HeroList = dataLoader.LoadHeroData(Path.Combine(Application.dataPath, heroDataFilePath));
+        HeroRatesList = new List<List<HeroRate>>();
+        foreach (string rateDataFilePath in rateDataFilePaths)
+        {
+            HeroRatesList.Add(dataLoader.LoadRateData(Path.Combine(Application.dataPath, rateDataFilePath)));
+        }
+        StageDataList = dataLoader.LoadStageData(Path.Combine(Application.dataPath, stageDataFilePath));
+        levelDataList = dataLoader.LoadLevelData(Path.Combine(Application.dataPath, stageDataFilePath));
+        stageEXPList = dataLoader.LoadStageEXP(Path.Combine(Application.dataPath, stageDataFilePath));
+
+
         Debug.Log($"Loaded {StageDataList.Count} stages.");
         foreach (var stage in StageDataList)
         {
@@ -107,35 +109,6 @@ public class GameManager : Singleton<GameManager>
         firestoreManager.UpdateUserData(CurrentUser, 
             onSuccess: () => Debug.Log("User data updated successfully."),
             onFailure: (error) => Debug.LogError("Error updating user data: " + error));
-    }
-
-    private HeroList LoadHeroData(string filePath)
-    {
-        string fullPath = Path.Combine(Application.dataPath, filePath);
-        ExcelDataLoader dataLoader = ScriptableObject.CreateInstance<ExcelDataLoader>();
-        dataLoader.Initialize(heroDataFilePath, rateDataFilePaths);
-        return dataLoader.LoadHeroData(fullPath);
-    }
-
-    private List<List<HeroRate>> LoadHeroRates(string[] filePaths)
-    {
-        List<List<HeroRate>> heroRatesList = new List<List<HeroRate>>();
-        ExcelDataLoader dataLoader = ScriptableObject.CreateInstance<ExcelDataLoader>();
-        dataLoader.Initialize(heroDataFilePath, filePaths);
-        foreach (var filePath in filePaths)
-        {
-            string fullPath = Path.Combine(Application.dataPath, filePath);
-            heroRatesList.Add(dataLoader.LoadRateData(fullPath));
-        }
-        return heroRatesList;
-    }
-
-    private List<StageData> LoadStageData(string filePath)
-    {
-        string fullPath = Path.Combine(Application.dataPath, filePath);
-        ExcelDataLoader dataLoader = ScriptableObject.CreateInstance<ExcelDataLoader>();
-        dataLoader.Initialize(heroDataFilePath, rateDataFilePaths);
-        return dataLoader.LoadStageData(fullPath);
     }
 
     private void OnDestroy()

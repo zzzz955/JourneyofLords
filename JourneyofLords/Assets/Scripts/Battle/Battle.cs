@@ -5,6 +5,10 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using System.Linq;
 using Unity.VisualScripting;
+using System.Security;
+using TMPro;
+using UnityEditor.Search;
+using System;
 
 public class Battle : MonoBehaviour
 {
@@ -16,9 +20,12 @@ public class Battle : MonoBehaviour
     public GameObject prefabEnemyMale;
     public GameObject prefabEnemyFemale;
     public GameObject prefabEmpty;
-    public GameObject panelVictory;
-    public GameObject panelDefeat;
-    
+    public GameObject panelResult;
+    public TMP_Text resultText;
+    public Transform resultGroup;
+    public GameObject prefabResultSlot;
+
+    public Dictionary<int, Hero> currentStageHeroes;
     public int stageIndex;
 
     private FirestoreManager firestoreManager;
@@ -48,10 +55,12 @@ public class Battle : MonoBehaviour
         {
             Debug.LogError("FirestoreManager not found in the scene.");
         }
+        CreateAlly(currentStageHeroes);
+        CreateEnemy(stageIndex);
         StartCoroutine(BattleCoroutine());
     }
 
-    public void CreateAlly(Dictionary<int, Hero> selected)
+    private void CreateAlly(Dictionary<int, Hero> selected)
     {
         for (int i = 0; i < 4; i++)
         {
@@ -91,7 +100,7 @@ public class Battle : MonoBehaviour
         IncreaseAllyStats(atkBouns, defBouns, hpBouns);
     }
 
-    public void CreateEnemy(int currentStageLevel)
+    private void CreateEnemy(int currentStageLevel)
     {
         List<StageData> stageDataList = GameManager.Instance.StageDataList;
         StageData currentStageData = stageDataList.Find(stage => stage.level == currentStageLevel);
@@ -187,24 +196,46 @@ public class Battle : MonoBehaviour
             }
         }
         yield return new WaitForSeconds(1f);
-        if (allyUnits.Any(unit => unit != null))
-        {
-            panelVictory.SetActive(true);
-            GameObject stageManagerObject = GameObject.Find("StageManager");
-            if (stageManagerObject != null) {
-                StageManager stageManager = stageManagerObject.GetComponent<StageManager>();
-                stageManager.StageCleared(stageIndex);
-        }
-        }
-        else
-        {
-            panelDefeat.SetActive(true);
-        }
+        ShowResult();
+
         ClearUnits(allyUnits);
         ClearUnits(enemyUnits);
 
         ResetUnits(tempAllyUnits);
         ResetUnits(tempEnemyUnits);
+    }
+
+    private void ShowResult() {
+        panelResult.SetActive(true);
+        if (allyUnits.Any(unit => unit != null)) {
+            resultText.SetText("Victory!");
+            Debug.Log(gameManager.CurrentUser.userID);
+
+            GameObject stageManagerObject = GameObject.Find("StageManager");
+            if (stageManagerObject != null) {
+                StageManager stageManager = stageManagerObject.GetComponent<StageManager>();
+                stageManager.StageCleared(stageIndex);
+            }
+        } 
+        else {
+            resultText.SetText("Defeat");
+        }
+        for (int i = 0; i < 4; i++)
+            {
+                if (currentStageHeroes[i] != null)
+                {
+                    if (currentStageHeroes.ContainsKey(i) && currentStageHeroes[i] != null)
+                    {
+                        GameObject resultHero = Instantiate(prefabResultSlot, resultGroup);
+                        HeroDisplay heroDisplay = resultHero.GetComponent<HeroDisplay>();
+                        if (heroDisplay != null)
+                        {
+                            heroDisplay.SetHeroData(currentStageHeroes[i]);
+                        }
+                    }
+                }
+            }
+
     }
 
     private IEnumerator PerformAttack(Unit attacker, List<UnitStats> enemyUnits, bool isAlly)

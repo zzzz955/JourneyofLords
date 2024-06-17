@@ -6,38 +6,6 @@ using ExcelDataReader;
 
 public class ExcelDataLoader : ScriptableObject
 {
-    public string heroDataFilePath; // 영웅 정보 파일 경로
-    public string[] rateDataFilePaths; // 확률 정보 파일 경로
-
-    private HeroList heroList;
-    private List<List<HeroRate>> heroRatesList = new List<List<HeroRate>>();
-
-    public void Initialize(string heroDataFilePath, string[] rateDataFilePaths)
-    {
-        this.heroDataFilePath = heroDataFilePath;
-        this.rateDataFilePaths = rateDataFilePaths;
-    }
-
-    public void LoadAllData()
-    {
-        string heroDataPath = Path.Combine(Application.dataPath, heroDataFilePath);
-        heroList = LoadHeroData(heroDataPath);
-
-        foreach (string rateDataFilePath in rateDataFilePaths)
-        {
-            string rateDataPath = Path.Combine(Application.dataPath, rateDataFilePath);
-            List<HeroRate> heroRates = LoadRateData(rateDataPath);
-            heroRatesList.Add(heroRates);
-        }
-
-        HeroManager heroManager = FindObjectOfType<HeroManager>();
-        if (heroManager != null)
-        {
-            heroManager.SetHeroList(heroList); // 모든 영웅 데이터를 초기화
-            heroManager.SetHeroRatesList(heroRatesList); // 각 파일의 확률 리스트를 설정
-        }
-    }
-
     public HeroList LoadHeroData(string excelFilePath)
     {
         List<Hero> heroes = new List<Hero>();
@@ -185,5 +153,71 @@ public class ExcelDataLoader : ScriptableObject
         }
 
         return stages;
+    }
+
+    public List<LevelData> LoadLevelData(string excelFilePath)
+    {
+        List<LevelData> levels = new List<LevelData>();
+        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+        using (var stream = File.Open(excelFilePath, FileMode.Open, FileAccess.Read))
+        {
+            using (var reader = ExcelReaderFactory.CreateReader(stream))
+            {
+                var result = reader.AsDataSet();
+                var table = result.Tables[0];
+
+                for (int i = 1; i < table.Rows.Count; i++)
+                {
+                    var row = table.Rows[i];
+
+                    try
+                    {
+                        int level = int.Parse(row[0].ToString());
+                        int needEXP = int.Parse(row[1].ToString());
+                        LevelData leveldata = new LevelData(level, needEXP);
+                        levels.Add(leveldata);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"Error processing row {i}: {ex.Message}");
+                    }
+                }
+            }
+        }
+        return levels;
+    }
+
+    public List<StageEXP> LoadStageEXP(string excelFilePath)
+    {
+        List<StageEXP> stageEXPs = new List<StageEXP>();
+        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+        using (var stream = File.Open(excelFilePath, FileMode.Open, FileAccess.Read))
+        {
+            using (var reader = ExcelReaderFactory.CreateReader(stream))
+            {
+                var result = reader.AsDataSet();
+                var table = result.Tables[0];
+
+                for (int i = 1; i < table.Rows.Count; i++)
+                {
+                    var row = table.Rows[i];
+
+                    try
+                    {
+                        int stageLevel = int.Parse(row[0].ToString());
+                        int getEXP = int.Parse(row[1].ToString());
+                        StageEXP stageEXP = new StageEXP(stageLevel, getEXP);
+                        stageEXPs.Add(stageEXP);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"Error processing row {i}: {ex.Message}");
+                    }
+                }
+            }
+        }
+        return stageEXPs;
     }
 }

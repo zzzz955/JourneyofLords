@@ -12,6 +12,10 @@ public class UnitStats : MonoBehaviour
     public float hp;
     public float maxHP;
 
+    private float initialAtk;
+    private float initialDef;
+    private float initialHp;
+
     public float atkBonus = 1.00f;
     public float defBonus = 1.00f;
     public float hpBonus = 1.00f;
@@ -31,6 +35,11 @@ public class UnitStats : MonoBehaviour
         def = hero.def;
         hp = hero.hp;
         maxHP = hp;
+
+        initialAtk = atk;
+        initialDef = def;
+        initialHp = hp;
+
         UpdateHealthUI();
     }
 
@@ -89,9 +98,10 @@ public class UnitStats : MonoBehaviour
         UpdateHealthUI();
     }
 
-    public void TurnBasedIncreaseStats(float atkPercentage, float defPercentage, float hpPercentage) {
-        atk *= atkPercentage;
-        def *= defPercentage;
+    public void TurnBasedIncreaseADStats(float atkPercentage, float defPercentage) {
+        atk += initialAtk * (atkPercentage / 100f);
+        def += initialDef * (defPercentage / 100f);
+        
         GameObject stackEffect = Instantiate(stack, stackBar);
     }
 }

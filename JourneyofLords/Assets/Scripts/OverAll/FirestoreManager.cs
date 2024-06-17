@@ -26,7 +26,7 @@ public class FirestoreManager : MonoBehaviour
             {
                 auth = FirebaseAuth.DefaultInstance;
                 firestore = FirebaseFirestore.DefaultInstance;
-                Debug.Log("Firebase Initialized Successfully");
+                Debug.Log($"Firebase Initialized Successfully");
             }
             else
             {
@@ -119,6 +119,17 @@ public class FirestoreManager : MonoBehaviour
         }
     }
 
+    public void UpdateHeroEXP(List<Hero> heroes, int exp)
+    {
+        string userId = auth.CurrentUser.UserId;
+        foreach (Hero hero in heroes) {
+            DocumentReference heroRef = firestore.Collection("users").Document(userId).Collection("heroes").Document(hero.id);
+            while (exp > 0) {
+                
+            }
+        }
+    }
+
     public void UpdateUserMaxHeroes(string userId, int newMaxHeroes)
     {
         DocumentReference docRef = firestore.Collection("users").Document(userId);
@@ -139,30 +150,6 @@ public class FirestoreManager : MonoBehaviour
                 Debug.LogError("Error updating maxHeroes: " + task.Exception);
             }
         });
-    }
-
-    private void GetHeroItems(string userId, Hero hero)
-    {
-        List<Dictionary<string, object>> items = new List<Dictionary<string, object>>();
-        foreach (string itemId in hero.equip)
-        {
-            firestore.Collection("users").Document(userId).Collection("items").Document(itemId).GetSnapshotAsync().ContinueWithOnMainThread(task =>
-            {
-                if (task.IsFaulted)
-                {
-                    Debug.LogError("Error getting item data: " + task.Exception);
-                    return;
-                }
-
-                DocumentSnapshot itemDocument = task.Result;
-                items.Add(itemDocument.ToDictionary());
-                if (items.Count == hero.equip.Count)
-                {
-                    // Hero 클래스에 SetItems 메서드가 없으므로, items 데이터를 사용할 곳에서 처리하세요.
-                    // 예: hero.SetItems(items);
-                }
-            });
-        }
     }
 
     public void UpdateUserMaxStage(string userId, int newMaxStage)

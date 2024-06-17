@@ -15,7 +15,6 @@ public class AuthManager : MonoBehaviour
 {
     private FirebaseFirestore db;
     private FirebaseAuth auth;
-    private ListenerRegistration userListener;
 
     private void Awake()
     {
@@ -108,6 +107,7 @@ public class AuthManager : MonoBehaviour
                 userData.userID = newUser.UserId;
                 Debug.Log("User data loaded successfully: " + userData.email);
                 GameManager.Instance.SetUserData(userData);
+                FirestoreManager firestoreManager = FindAnyObjectByType<FirestoreManager>();
             }
             else
             {

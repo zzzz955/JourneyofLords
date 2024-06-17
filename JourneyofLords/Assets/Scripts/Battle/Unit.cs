@@ -10,6 +10,7 @@ public class Unit : MonoBehaviour {
     private ITargetStrategy initialTargetStrategy;
     private Hero currentHero;
     private UnitStats stats;
+    private float damageIncrease = 1.00f;
 
     public int initialAttackCount;
 
@@ -203,33 +204,33 @@ public class Unit : MonoBehaviour {
                 break;
             case 51:
                 if (turnCounter <= 5) {
-                    stats.TurnBasedIncreaseStats(1.03f, 1.03f, 1.00f);
+                    stats.TurnBasedIncreaseADStats(1.03f, 1.03f);
                 }
                 break;
             case 52:
                 if (turnCounter <= 5) {
-                    stats.TurnBasedIncreaseStats(1.04f, 1.04f, 1.00f);
+                    stats.TurnBasedIncreaseADStats(1.04f, 1.04f);
                 }
                 break;
             case 53:
                 if (turnCounter <= 5) {
-                    stats.TurnBasedIncreaseStats(1.05f, 1.05f, 1.00f);
+                    stats.TurnBasedIncreaseADStats(1.05f, 1.05f);
                     Debug.Log($"호출 : {turnCounter}");
                 }
                 break;
             case 54:
                 if (turnCounter <= 5) {
-                    stats.TurnBasedIncreaseStats(1.05f, 1.00f, 1.00f);
+                    stats.TurnBasedIncreaseADStats(1.05f, 1.00f);
                 }
                 break;
             case 55:
                 if (turnCounter <= 5) {
-                    stats.TurnBasedIncreaseStats(1.07f, 1.00f, 1.00f);
+                    stats.TurnBasedIncreaseADStats(1.07f, 1.00f);
                 }
                 break;
             case 56:
                 if (turnCounter <= 5) {
-                    stats.TurnBasedIncreaseStats(1.10f, 1.00f, 1.00f);
+                    stats.TurnBasedIncreaseADStats(1.10f, 1.00f);
                     Debug.Log($"호출 : {turnCounter}");
                 }
                 break;
@@ -252,6 +253,7 @@ public class Unit : MonoBehaviour {
         foreach (var target in targets) {
             if (target != null) {
                 float damage = DamageStrategy.CalculateDamage(this.GetComponent<UnitStats>(), target);
+                damage *= damageIncrease;
                 target.TakeDamage(damage);
             }
         }

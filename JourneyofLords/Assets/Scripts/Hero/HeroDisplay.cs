@@ -20,10 +20,14 @@ public class HeroDisplay : MonoBehaviour
     public GameObject hpBonusPrefab;
     public GameObject popupHeroDicPrefab;
     public Toggle selectToggle; // 체크박스 추가
+    public GameObject resultPrefab;
+    public TMP_Text levelUpText;
 
     private GameObject atkBonusObject;
     private GameObject defBonusObject;
     private GameObject hpBonusObject;
+    
+    public bool ifLevelUp = false;
 
     public Hero currentHero { get; private set; }
     public System.Action<Hero, bool> OnToggleChanged; // 체크박스 변경 콜백
@@ -70,6 +74,15 @@ public class HeroDisplay : MonoBehaviour
             hpBonusObject = Instantiate(hpBonusPrefab, transform);
             hpBonusObject.transform.localPosition = new Vector3(0, -210, 0);
         }
+
+        if (resultPrefab != null) {
+            GameObject resultObject = Instantiate(resultPrefab, transform);
+            resultObject.transform.localPosition = new Vector3(0, -150, 0);
+        }
+        if (levelUpText != null && ifLevelUp == true) {
+            levelUpText.SetText("Level Up!");
+        }
+        
     }
 
     public Hero GetHero()

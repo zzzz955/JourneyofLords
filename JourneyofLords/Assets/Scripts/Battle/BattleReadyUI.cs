@@ -214,8 +214,7 @@ public class BattleReadyUI : MonoBehaviour
     public void StartBattle() {
         GameObject battleIn = Instantiate(battleUIPrefab, transform.parent);
         Battle battle = battleIn.GetComponent<Battle>();
-        battle.CreateAlly(gameManager.SelectedHeroes);
-        battle.CreateEnemy(currentStage);
+        battle.currentStageHeroes = gameManager.SelectedHeroes;
         battle.stageIndex = currentStage;
         Destroy(gameObject);
     }
