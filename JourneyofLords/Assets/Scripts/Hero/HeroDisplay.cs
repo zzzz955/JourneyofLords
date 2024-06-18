@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 using UnityEngine.EventSystems;
 using System.Linq;
 using System.Collections.Generic;
@@ -20,14 +21,15 @@ public class HeroDisplay : MonoBehaviour
     public GameObject hpBonusPrefab;
     public GameObject popupHeroDicPrefab;
     public Toggle selectToggle; // 체크박스 추가
-    public GameObject resultPrefab;
+    public GameObject expObject1;
+    public GameObject expObject2;
     public TMP_Text levelUpText;
 
     private GameObject atkBonusObject;
     private GameObject defBonusObject;
     private GameObject hpBonusObject;
     
-    public bool ifLevelUp = false;
+    public bool isLevelUp = false;
     public int getEXP;
 
     public Hero currentHero { get; private set; }
@@ -76,16 +78,23 @@ public class HeroDisplay : MonoBehaviour
             hpBonusObject.transform.localPosition = new Vector3(0, -210, 0);
         }
 
-        if (resultPrefab != null) {
-            GameObject resultObject = Instantiate(resultPrefab, transform);
-            resultObject.transform.localPosition = new Vector3(0, -150, 0);
+        if (expObject1 != null) {
+            expObject1.SetActive(true);
+            TMP_Text expText = expObject1.GetComponentInChildren<TMP_Text>();
+            expText.SetText($"EXP+{getEXP}");
         }
-        if (levelUpText != null && ifLevelUp == true) {
+        if (expObject2 != null) {
+            expObject2.SetActive(true);
+            GameManager gameManager = GameManager.Instance;
+            int maxEXP = gameManager.levelDataList[currentHero.level - 1].needEXP;
+            float expVal = currentHero.exp / maxEXP;
+            Slider expSlider = expObject2.GetComponentInChildren<Slider>();
+            expSlider.value = expVal;
+        }
+        if (levelUpText != null && isLevelUp == true) {
             levelUpText.SetText("Level Up!");
         }
-        
     }
-
     public Hero GetHero()
     {
         return currentHero;

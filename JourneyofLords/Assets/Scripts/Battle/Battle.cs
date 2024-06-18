@@ -226,15 +226,22 @@ public class Battle : MonoBehaviour
                 HeroDisplay heroDisplay = resultHero.GetComponent<HeroDisplay>();
                 if (heroDisplay != null)
                 {
+                    heroDisplay.isLevelUp = levelUpResult[i];
                     heroDisplay.SetHeroData(currentHeroes[i]);
                 }
             }
         }
         else {
             resultText.SetText("Defeat");
+            for (int i = 0; i < currentHeroes.Count; i++) {
+                GameObject resultHero = Instantiate(prefabResultSlot, resultGroup);
+                HeroDisplay heroDisplay = resultHero.GetComponent<HeroDisplay>();
+                if (heroDisplay != null)
+                {
+                    heroDisplay.SetHeroData(currentHeroes[i]);
+                }
+            }
         }
-
-
     }
 
     private IEnumerator PerformAttack(Unit attacker, List<UnitStats> enemyUnits, bool isAlly)
