@@ -12,6 +12,7 @@ public class FirestoreManager : MonoBehaviour
 {
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
+    private GameManager gameManager;
 
     void Awake()
     {
@@ -21,6 +22,7 @@ public class FirestoreManager : MonoBehaviour
 
     void InitializeFirebase()
     {
+        gameManager = GameManager.Instance;
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
             if (task.Result == DependencyStatus.Available)
             {
@@ -119,15 +121,41 @@ public class FirestoreManager : MonoBehaviour
         }
     }
 
-    public void UpdateHeroEXP(List<Hero> heroes, int exp)
+    public async Task<List<bool>> UpdateHeroEXP(List<Hero> heroes, int exp)
     {
         string userId = auth.CurrentUser.UserId;
+        List<Task> updateTasks = new List<Task>();
+        List<bool> isLevelUp = new List<bool>();
+
         foreach (Hero hero in heroes) {
-            DocumentReference heroRef = firestore.Collection("users").Document(userId).Collection("heroes").Document(hero.id);
-            while (exp > 0) {
-                
+            if (hero != null) {
+                DocumentReference heroRef = firestore.Collection("users").Document(userId).Collection("heroes").Document(hero.id);
+                hero.exp += exp;
+                List<LevelData> levelDatas = gameManager.levelDataList;
+                bool LevelUp = false;
+
+                while (true) {
+                    if (levelDatas[hero.level - 1].needEXP < hero.exp) {
+                        hero.exp -= levelDatas[hero.level - 1].needEXP;
+                        hero.level ++;
+                        LevelUp = true;
+                    } else {
+                        break;
+                    }
+                }
+                isLevelUp.Add(LevelUp);
+
+                Dictionary<string, object> updates = new Dictionary<string, object>
+                {
+                    { "level", hero.level },
+                    { "exp", hero.exp }
+                };
+
+                updateTasks.Add(heroRef.UpdateAsync(updates));
             }
         }
+        await Task.WhenAll(updateTasks);
+        return isLevelUp;
     }
 
     public void UpdateUserMaxHeroes(string userId, int newMaxHeroes)

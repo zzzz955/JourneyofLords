@@ -36,6 +36,7 @@ public class Battle : MonoBehaviour
     private List<UnitStats> enemyUnits = new List<UnitStats>();
     private List<UnitStats> tempAllyUnits = new List<UnitStats>();
     private List<UnitStats> tempEnemyUnits = new List<UnitStats>();
+    private List<Hero> currentHeroes = new List<Hero>();
 
     private float atkBouns;
     private float defBouns;
@@ -51,6 +52,7 @@ public class Battle : MonoBehaviour
     {
         firestoreManager = FindObjectOfType<FirestoreManager>();
         gameManager = GameManager.Instance;
+        currentStageHeroes = gameManager.SelectedHeroes;
         if (firestoreManager == null)
         {
             Debug.LogError("FirestoreManager not found in the scene.");
@@ -68,6 +70,7 @@ public class Battle : MonoBehaviour
             {
                 if (selected.ContainsKey(i) && selected[i] != null)
                 {
+                    currentHeroes.Add(selected[i]);
                     GameObject allyHero = Instantiate(prefabSlot, allyGroup);
                     GameObject allyObject = Instantiate(
                         selected[i].sex == "male" ? prefabAllyMale : prefabAllyFemale,
@@ -205,36 +208,32 @@ public class Battle : MonoBehaviour
         ResetUnits(tempEnemyUnits);
     }
 
-    private void ShowResult() {
+    private async void ShowResult() {
         panelResult.SetActive(true);
         if (allyUnits.Any(unit => unit != null)) {
             resultText.SetText("Victory!");
-            Debug.Log(gameManager.CurrentUser.userID);
 
             GameObject stageManagerObject = GameObject.Find("StageManager");
             if (stageManagerObject != null) {
                 StageManager stageManager = stageManagerObject.GetComponent<StageManager>();
                 stageManager.StageCleared(stageIndex);
             }
-        } 
+
+            int getExp = gameManager.stageEXPList[stageIndex - 1].getEXP;
+            List<bool> levelUpResult = await firestoreManager.UpdateHeroEXP(currentHeroes, getExp);
+            for (int i = 0; i < currentHeroes.Count; i++) {
+                GameObject resultHero = Instantiate(prefabResultSlot, resultGroup);
+                HeroDisplay heroDisplay = resultHero.GetComponent<HeroDisplay>();
+                if (heroDisplay != null)
+                {
+                    heroDisplay.SetHeroData(currentHeroes[i]);
+                }
+            }
+        }
         else {
             resultText.SetText("Defeat");
         }
-        for (int i = 0; i < 4; i++)
-            {
-                if (currentStageHeroes[i] != null)
-                {
-                    if (currentStageHeroes.ContainsKey(i) && currentStageHeroes[i] != null)
-                    {
-                        GameObject resultHero = Instantiate(prefabResultSlot, resultGroup);
-                        HeroDisplay heroDisplay = resultHero.GetComponent<HeroDisplay>();
-                        if (heroDisplay != null)
-                        {
-                            heroDisplay.SetHeroData(currentStageHeroes[i]);
-                        }
-                    }
-                }
-            }
+
 
     }
 

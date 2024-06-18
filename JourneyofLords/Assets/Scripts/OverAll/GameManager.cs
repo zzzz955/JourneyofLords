@@ -38,12 +38,12 @@ public class GameManager : Singleton<GameManager>
     {
         base.Awake();
 
-        Debug.Log("GameManager Awake 호출됨");
-
         if (Instance == this)
         {
+            DontDestroyOnLoad(gameObject);
+            Debug.Log("GameManager Awake 호출됨");
             firestoreManager = FindObjectOfType<FirestoreManager>();
-            LoadAllData();
+            LoadAllData();            
         }
     }
 
@@ -88,19 +88,19 @@ public class GameManager : Singleton<GameManager>
             HeroRatesList.Add(dataLoader.LoadRateData(Path.Combine(Application.dataPath, rateDataFilePath)));
         }
         StageDataList = dataLoader.LoadStageData(Path.Combine(Application.dataPath, stageDataFilePath));
-        levelDataList = dataLoader.LoadLevelData(Path.Combine(Application.dataPath, stageDataFilePath));
-        stageEXPList = dataLoader.LoadStageEXP(Path.Combine(Application.dataPath, stageDataFilePath));
+        levelDataList = dataLoader.LoadLevelData(Path.Combine(Application.dataPath, levelDataFilePath));
+        stageEXPList = dataLoader.LoadStageEXP(Path.Combine(Application.dataPath, stageEXPFilePath));
 
-
+        Debug.Log($"Loaded {HeroList.heroes.Count} heroes.");
+        Debug.Log($"Loaded {HeroRatesList.Count} heroRates.");
         Debug.Log($"Loaded {StageDataList.Count} stages.");
-        foreach (var stage in StageDataList)
-        {
-            Debug.Log($"Stage level: {stage.level}, Enemies count: {stage.enemies.Count}");
-        }
+        Debug.Log($"Loaded {levelDataList.Count} levels.");
+        Debug.Log($"Loaded {stageEXPList.Count} stageEXPs.");
     }
 
     public void SetUserData(User userData)
     {
+        Debug.Log("SetUserData called with user: " + userData.userID);
         CurrentUser = userData;
     }
 

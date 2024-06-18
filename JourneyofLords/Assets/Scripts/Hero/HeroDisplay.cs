@@ -28,6 +28,7 @@ public class HeroDisplay : MonoBehaviour
     private GameObject hpBonusObject;
     
     public bool ifLevelUp = false;
+    public int getEXP;
 
     public Hero currentHero { get; private set; }
     public System.Action<Hero, bool> OnToggleChanged; // 체크박스 변경 콜백
