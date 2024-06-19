@@ -198,7 +198,6 @@ public class Battle : MonoBehaviour
                 }
             }
         }
-        yield return new WaitForSeconds(1f);
         ShowResult();
 
         ClearUnits(allyUnits);
@@ -227,6 +226,7 @@ public class Battle : MonoBehaviour
                 if (heroDisplay != null)
                 {
                     heroDisplay.isLevelUp = levelUpResult[i];
+                    heroDisplay.getEXP = getExp;
                     heroDisplay.SetHeroData(currentHeroes[i]);
                 }
             }

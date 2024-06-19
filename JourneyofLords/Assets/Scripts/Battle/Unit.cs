@@ -107,14 +107,17 @@ public class Unit : MonoBehaviour {
             case 48:
                 initialDamageStrategy = new SpecialDamageStrategy(1.40f);
                 initialTargetStrategy = new FrontTargetStrategy();
+                battle.BonusUpdate(0.03f, 0.03f, 0.00f);
                 break;
             case 49:
                 initialDamageStrategy = new SpecialDamageStrategy(1.60f);
                 initialTargetStrategy = new FrontTargetStrategy();
+                battle.BonusUpdate(0.04f, 0.04f, 0.00f);
                 break;
             case 50:
                 initialDamageStrategy = new SpecialDamageStrategy(1.80f);
                 initialTargetStrategy = new FrontTargetStrategy();
+                battle.BonusUpdate(0.05f, 0.05f, 0.00f);
                 break;
             case 51:
                 initialDamageStrategy = new BasicDamageStrategy();

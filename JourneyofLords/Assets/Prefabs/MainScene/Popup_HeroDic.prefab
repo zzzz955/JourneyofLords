@@ -792,7 +792,8 @@ MonoBehaviour:
   spriteImage: {fileID: 2970153352013516758}
   lvImage: {fileID: 4280605715132584024}
   gradeImage: {fileID: 8145618152613476920}
-  levelText: {fileID: 3465131834337393324}
+  levelText1: {fileID: 3183855799700555655}
+  levelText2: {fileID: 3465131834337393324}
   heroNameText: {fileID: 7938241303024670390}
   gradeText: {fileID: 8377948774356004560}
   attText: {fileID: 5915364301308443864}
@@ -1024,7 +1025,7 @@ GameObject:
   - component: {fileID: 4526854091812512837}
   - component: {fileID: 3183855799700555655}
   m_Layer: 5
-  m_Name: fixed
+  m_Name: flexible
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1077,7 +1078,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB808\uBCA8 : 1/1000"
+  m_text: "\uB808\uBCA8 : 1"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 388535d701462b54a80ed2d7629c2b0e, type: 2}
   m_sharedMaterial: {fileID: 7290432868454871191, guid: 388535d701462b54a80ed2d7629c2b0e, type: 2}

@@ -139,6 +139,9 @@ public class FirestoreManager : MonoBehaviour
                         hero.exp -= levelDatas[hero.level - 1].needEXP;
                         hero.level ++;
                         LevelUp = true;
+                        hero.atk += 100 * (1 + hero.grade/10f);
+                        hero.def += 80 * (1 + hero.grade/10f);
+                        hero.hp += 60 * (1 + hero.grade/10f);
                     } else {
                         break;
                     }
@@ -148,7 +151,10 @@ public class FirestoreManager : MonoBehaviour
                 Dictionary<string, object> updates = new Dictionary<string, object>
                 {
                     { "level", hero.level },
-                    { "exp", hero.exp }
+                    { "exp", hero.exp },
+                    { "atk", hero.atk },
+                    { "def", hero.def },
+                    { "hp", hero.hp }
                 };
 
                 updateTasks.Add(heroRef.UpdateAsync(updates));

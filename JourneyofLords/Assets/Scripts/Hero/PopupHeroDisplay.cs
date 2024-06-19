@@ -11,7 +11,8 @@ public class PopupHeroDisplay : MonoBehaviour
     public Image spriteImage;
     public Image lvImage;
     public Image gradeImage;
-    public TMP_Text levelText;
+    public TMP_Text levelText1;
+    public TMP_Text levelText2;
     public TMP_Text heroNameText;
     public TMP_Text gradeText;
     public TMP_Text attText;
@@ -39,7 +40,7 @@ public class PopupHeroDisplay : MonoBehaviour
         }
     }
 
-    public void SetHeroData(Hero hero)
+    public void SetHeroData(Hero hero, float tempAtk, float tempDef, float tempHp)
     {
         // 스프라이트 설정
         Sprite sprite1 = Resources.Load<Sprite>(hero.spriteName);
@@ -73,7 +74,8 @@ public class PopupHeroDisplay : MonoBehaviour
         }
 
         // 텍스트 필드 설정
-        levelText.SetText(hero.level.ToString());
+        levelText1.SetText($"레벨 : {hero.level}");
+        levelText2.SetText(hero.level.ToString());
         heroNameText.SetText(hero.name);
         gradeText.SetText("등급 : " + hero.grade + "성 영웅");
         if (hero.att == "red") {
@@ -91,9 +93,9 @@ public class PopupHeroDisplay : MonoBehaviour
         if (hero.sex == "male") sexText.SetText("성별 : 남자");
         if (hero.sex == "female") sexText.SetText("성별 : 여자");
         growthText.SetText("성장 : " + hero.growth);
-        atkText.SetText("공격력 : " + hero.atk.ToString("F0"));
-        defText.SetText("방어력 : " + hero.def.ToString("F0"));
-        hpText.SetText("체력 : " + hero.hp.ToString("F0"));
+        atkText.SetText("공격력 : " + tempAtk.ToString("F0"));
+        defText.SetText("방어력 : " + tempDef.ToString("F0"));
+        hpText.SetText("체력 : " + tempHp.ToString("F0"));
         etcText.SetText(hero.description);
     }
     

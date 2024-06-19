@@ -15,7 +15,7 @@ public class StageManager : MonoBehaviour
 
     private int currentPage = 0;
     private int stagesPerPage = 10;
-    private int totalStages = 50; // 예시로 총 50개의 스테이지가 있다고 가정
+    private int totalStages = 100; // 예시로 총 50개의 스테이지가 있다고 가정
     private int maxStage;
 
     private FirestoreManager firestoreManager;

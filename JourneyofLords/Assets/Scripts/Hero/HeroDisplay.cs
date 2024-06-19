@@ -28,6 +28,10 @@ public class HeroDisplay : MonoBehaviour
     private GameObject atkBonusObject;
     private GameObject defBonusObject;
     private GameObject hpBonusObject;
+
+    private float tempAtk;
+    private float tempDef;
+    private float tempHp;
     
     public bool isLevelUp = false;
     public int getEXP;
@@ -38,6 +42,9 @@ public class HeroDisplay : MonoBehaviour
     public void SetHeroData(Hero hero)
     {
         currentHero = hero;
+        tempAtk = hero.atk;
+        tempDef = hero.def;
+        tempHp = hero.hp;
 
         // 스프라이트 설정
         if (spriteImage != null) {
@@ -58,9 +65,9 @@ public class HeroDisplay : MonoBehaviour
         // 텍스트 필드 설정
         if (levelText != null) {levelText.SetText(hero.level.ToString());}
         if (heroName != null) {heroName.SetText(hero.name);}
-        if (heroATK != null) {heroATK.SetText(hero.atk.ToString("F0"));}
-        if (heroDEF != null) {heroDEF.SetText(hero.def.ToString("F0"));}
-        if (heroHP != null) {heroHP.SetText(hero.hp.ToString("F0"));}
+        if (heroATK != null) {heroATK.SetText(tempAtk.ToString("F0"));}
+        if (heroDEF != null) {heroDEF.SetText(tempDef.ToString("F0"));}
+        if (heroHP != null) {heroHP.SetText(tempHp.ToString("F0"));}
 
         // 체크박스 설정
         if (selectToggle != null) {selectToggle.onValueChanged.AddListener(OnToggleValueChanged);}
@@ -80,15 +87,16 @@ public class HeroDisplay : MonoBehaviour
 
         if (expObject1 != null) {
             expObject1.SetActive(true);
-            TMP_Text expText = expObject1.GetComponentInChildren<TMP_Text>();
+            TMP_Text expText = expObject1.GetComponentInChildren<TMP_Text>(true);
             expText.SetText($"EXP+{getEXP}");
         }
         if (expObject2 != null) {
             expObject2.SetActive(true);
             GameManager gameManager = GameManager.Instance;
             int maxEXP = gameManager.levelDataList[currentHero.level - 1].needEXP;
-            float expVal = currentHero.exp / maxEXP;
-            Slider expSlider = expObject2.GetComponentInChildren<Slider>();
+            float expVal = (float)currentHero.exp / (float)maxEXP;
+            Debug.Log($"maxEXP : {currentHero.exp}, {maxEXP}, {expVal}");
+            Slider expSlider = expObject2.GetComponentInChildren<Slider>(true);
             expSlider.value = expVal;
         }
         if (levelUpText != null && isLevelUp == true) {
@@ -124,7 +132,7 @@ public class HeroDisplay : MonoBehaviour
 
         if (popupHeroDisplay != null)
         {
-            popupHeroDisplay.SetHeroData(currentHero);
+            popupHeroDisplay.SetHeroData(currentHero, tempAtk, tempDef, tempHp);
         }
         else
         {
@@ -173,9 +181,9 @@ public class HeroDisplay : MonoBehaviour
 
     public void UpdateStats(float newAtk, float newDef, float newHP, float atkBonusPercentage, float defBonusPercentage, float hpBonusPercentage)
     {
-        currentHero.atk = newAtk;
-        currentHero.def = newDef;
-        currentHero.hp = newHP;
+        tempAtk = newAtk;
+        tempDef = newDef;
+        tempHp = newHP;
         
         if (atkBonusObject != null)
         {
