@@ -9,11 +9,11 @@ using TMPro;
 
 public class GameManager : Singleton<GameManager>
 {
-    public string heroDataFilePath = "Scripts/GameData/HeroData.xlsx";
-    public string[] rateDataFilePaths = { "Scripts/GameData/HeroRecruit1.xlsx", "Scripts/GameData/HeroRecruit2.xlsx", "Scripts/GameData/HeroRecruit3.xlsx" };
-    public string stageDataFilePath = "Scripts/GameData/StageData.xlsx";
-    public string heroLevelDataFilePath = "Scripts/GameData/HeroLevelData.xlsx";
-    public string stageEXPFilePath = "Scripts/GameData/StageEXP.xlsx";
+    private string heroDataFilePath = "Scripts/GameData/HeroData.xlsx";
+    private string[] rateDataFilePaths = { "Scripts/GameData/HeroRecruit1.xlsx", "Scripts/GameData/HeroRecruit2.xlsx", "Scripts/GameData/HeroRecruit3.xlsx", "Scripts/GameData/HeroRecruit4.xlsx"};
+    private string stageDataFilePath = "Scripts/GameData/StageData.xlsx";
+    private string heroLevelDataFilePath = "Scripts/GameData/HeroLevelData.xlsx";
+    private string stageEXPFilePath = "Scripts/GameData/StageEXP.xlsx";
 
     public HeroList HeroList { get; private set; }
     public List<List<HeroRate>> HeroRatesList { get; private set; }

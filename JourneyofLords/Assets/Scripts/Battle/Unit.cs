@@ -185,6 +185,18 @@ public class Unit : MonoBehaviour {
                 initialDamageStrategy = new SpecialDamageStrategy(1.30f);
                 initialTargetStrategy = new BackTargetStrategy();
                 break;
+            case 66:
+                initialDamageStrategy = new SpecialDamageStrategy(0.30f);
+                initialTargetStrategy = new AllTargetStrategy();
+                break;
+            case 67:
+                initialDamageStrategy = new SpecialDamageStrategy(0.40f);
+                initialTargetStrategy = new AllTargetStrategy();
+                break;
+            case 68:
+                initialDamageStrategy = new SpecialDamageStrategy(0.50f);
+                initialTargetStrategy = new AllTargetStrategy();
+                break;
             default:
                 initialDamageStrategy = new BasicDamageStrategy();
                 initialTargetStrategy = new FrontTargetStrategy();
@@ -240,6 +252,15 @@ public class Unit : MonoBehaviour {
             case 60:
             case 61:
             case 62:
+                if (turnCounter > 1) {
+                DamageStrategy = new BasicDamageStrategy();
+                TargetStrategy = new FrontTargetStrategy();
+                initialAttackCount = 1;
+                }
+                break;
+            case 66:
+            case 67:
+            case 68:
                 if (turnCounter > 1) {
                 DamageStrategy = new BasicDamageStrategy();
                 TargetStrategy = new FrontTargetStrategy();

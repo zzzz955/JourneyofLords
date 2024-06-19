@@ -261,34 +261,29 @@ public class Battle : MonoBehaviour
         Vector3 startPos = attacker.transform.position;
         for (int i = 0; i < attacker.initialAttackCount; i++) {
             List<UnitStats> targets = attacker.TargetStrategy.SelectTargets(enemyUnits.ToArray());
-            foreach (UnitStats target in targets)
+            if (targets.Count > 0)
             {
-                if (target != null)
+                // Move to the first target's position as a representative move
+                Vector3 endPos = isAlly 
+                    ? new Vector3(targets[0].transform.position.x - 1, startPos.y, startPos.z)
+                    : new Vector3(targets[0].transform.position.x + 1, startPos.y, startPos.z);
+                yield return StartCoroutine(MoveOverTime(attacker.transform, endPos, 0.5f));
+
+                // Perform attack on all targets
+                attacker.Attack(targets.ToArray());
+                yield return new WaitForSeconds(1f);
+
+                foreach (UnitStats target in targets)
                 {
-                    Vector3 endPos;
-                    if (isAlly)
-                    {
-                        endPos = new Vector3(target.transform.position.x - 1, startPos.y, startPos.z);
-                    }
-                    else
-                    {
-                        endPos = new Vector3(target.transform.position.x + 1, startPos.y, startPos.z);
-                    }
-                    yield return StartCoroutine(MoveOverTime(attacker.transform, endPos, 0.5f));
-
-                    // 개별 공격 수행
-                    attacker.Attack(new UnitStats[] { target });
-                    yield return new WaitForSeconds(1f);
-
                     if (target.hp <= 0)
                     {
                         Destroy(target.gameObject);
-                        // 해당 유닛 리스트에서 null로 설정
+                        // Remove the target from the enemyUnits list
                         for (int j = 0; j < enemyUnits.Count; j++)
                         {
-                            if (enemyUnits[i] == target)
+                            if (enemyUnits[j] == target)
                             {
-                                enemyUnits[i] = null;
+                                enemyUnits[j] = null;
                                 break;
                             }
                         }
