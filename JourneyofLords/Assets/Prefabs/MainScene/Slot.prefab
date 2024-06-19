@@ -59,7 +59,21 @@ MonoBehaviour:
   lvImage: {fileID: 8204294239052625193}
   gradeImage: {fileID: 1973725937037646177}
   levelText: {fileID: 8496683802849180185}
+  heroName: {fileID: 0}
+  heroATK: {fileID: 0}
+  heroDEF: {fileID: 0}
+  heroHP: {fileID: 0}
+  atkBonusPrefab: {fileID: 0}
+  defBonusPrefab: {fileID: 0}
+  hpBonusPrefab: {fileID: 0}
   popupHeroDicPrefab: {fileID: 3206276819780483211, guid: 5a96477ebfe2a814ab9d9a0d92c70786, type: 3}
+  popupOwnHeroPrefab: {fileID: 3206276819780483211, guid: de8cad849317d8c4d9268e6d8be2e72c, type: 3}
+  selectToggle: {fileID: 0}
+  expObject1: {fileID: 0}
+  expObject2: {fileID: 0}
+  levelUpText: {fileID: 0}
+  isLevelUp: 0
+  getEXP: 0
 --- !u!222 &2144117400160149597
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -144,7 +158,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3332148346808682305}
         m_TargetAssemblyTypeName: HeroDisplay, Assembly-CSharp
-        m_MethodName: OnClick
+        m_MethodName: PopupOwnHeroPrefab
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -20,6 +20,7 @@ public class HeroDisplay : MonoBehaviour
     public GameObject defBonusPrefab;
     public GameObject hpBonusPrefab;
     public GameObject popupHeroDicPrefab;
+    public GameObject popupOwnHeroPrefab;
     public Toggle selectToggle; // 체크박스 추가
     public GameObject expObject1;
     public GameObject expObject2;
@@ -38,6 +39,19 @@ public class HeroDisplay : MonoBehaviour
 
     public Hero currentHero { get; private set; }
     public System.Action<Hero, bool> OnToggleChanged; // 체크박스 변경 콜백
+
+    public void PopupOwnHeroPrefab () {
+        GameObject heroObject = Instantiate(popupOwnHeroPrefab, transform.parent.parent.parent.parent);
+        HeroDisplay heroDisplay = heroObject.GetComponent<HeroDisplay>();
+        if (heroDisplay != null)
+        {
+            heroDisplay.SetHeroData(currentHero);
+        }
+        else
+        {
+            Debug.LogError("HeroDisplay component not found on prefab.");
+        }
+    }
 
     public void SetHeroData(Hero hero)
     {
