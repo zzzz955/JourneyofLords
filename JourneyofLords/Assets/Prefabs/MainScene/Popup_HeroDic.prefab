@@ -2557,7 +2557,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "4\uBA85 \uBAA8\uB450 \uAC19\uC740 \uC18D\uC131\uC73C\uB85C \uCD9C\uC804
-    \uC2DC \uACF5\uACA9\uB825 \uBC0F \uBC29\uC5B4\uB825 10% \uC99D\uAC00"
+    \uC2DC \uACF5\uACA9\uB825 \uBC0F \uBC29\uC5B4\uB825 5% \uC99D\uAC00"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 388535d701462b54a80ed2d7629c2b0e, type: 2}
   m_sharedMaterial: {fileID: 7290432868454871191, guid: 388535d701462b54a80ed2d7629c2b0e, type: 2}

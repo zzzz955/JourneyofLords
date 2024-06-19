@@ -93,7 +93,7 @@ public class HeroDisplay : MonoBehaviour
         if (expObject2 != null) {
             expObject2.SetActive(true);
             GameManager gameManager = GameManager.Instance;
-            int maxEXP = gameManager.levelDataList[currentHero.level - 1].needEXP;
+            int maxEXP = gameManager.heroLevelDataList[currentHero.level - 1].needEXP;
             float expVal = (float)currentHero.exp / (float)maxEXP;
             Debug.Log($"maxEXP : {currentHero.exp}, {maxEXP}, {expVal}");
             Slider expSlider = expObject2.GetComponentInChildren<Slider>(true);

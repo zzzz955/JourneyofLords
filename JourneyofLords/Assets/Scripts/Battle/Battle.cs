@@ -53,13 +53,25 @@ public class Battle : MonoBehaviour
         firestoreManager = FindObjectOfType<FirestoreManager>();
         gameManager = GameManager.Instance;
         currentStageHeroes = gameManager.SelectedHeroes;
-        if (firestoreManager == null)
-        {
-            Debug.LogError("FirestoreManager not found in the scene.");
+        bool attBonus = CheckHeroesAtt(currentStageHeroes);
+        if (attBonus == true) {
+            atkBouns += 0.05f;
+            defBouns += 0.05f;
         }
         CreateAlly(currentStageHeroes);
         CreateEnemy(stageIndex);
         StartCoroutine(BattleCoroutine());
+    }
+
+    private bool CheckHeroesAtt(Dictionary<int, Hero> selected) {
+        // 첫 번째 Hero의 att 값을 가져옴
+        if (selected.Values.Any(hero => hero == null)) {
+            return false;
+        }
+        string firstAtt = selected.First().Value.att;
+
+        // 모든 Hero의 att 값이 첫 번째 Hero의 att 값과 동일한지 확인
+        return selected.Values.All(hero => hero.att == firstAtt);
     }
 
     private void CreateAlly(Dictionary<int, Hero> selected)

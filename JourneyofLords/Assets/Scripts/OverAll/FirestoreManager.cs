@@ -131,7 +131,7 @@ public class FirestoreManager : MonoBehaviour
             if (hero != null) {
                 DocumentReference heroRef = firestore.Collection("users").Document(userId).Collection("heroes").Document(hero.id);
                 hero.exp += exp;
-                List<LevelData> levelDatas = gameManager.levelDataList;
+                List<LevelData> levelDatas = gameManager.heroLevelDataList;
                 bool LevelUp = false;
 
                 while (true) {

@@ -12,13 +12,13 @@ public class GameManager : Singleton<GameManager>
     public string heroDataFilePath = "Scripts/GameData/HeroData.xlsx";
     public string[] rateDataFilePaths = { "Scripts/GameData/HeroRecruit1.xlsx", "Scripts/GameData/HeroRecruit2.xlsx", "Scripts/GameData/HeroRecruit3.xlsx" };
     public string stageDataFilePath = "Scripts/GameData/StageData.xlsx";
-    public string levelDataFilePath = "Scripts/GameData/levelData.xlsx";
-    public string stageEXPFilePath = "Scripts/GameData/stageEXP.xlsx";
+    public string heroLevelDataFilePath = "Scripts/GameData/HeroLevelData.xlsx";
+    public string stageEXPFilePath = "Scripts/GameData/StageEXP.xlsx";
 
     public HeroList HeroList { get; private set; }
     public List<List<HeroRate>> HeroRatesList { get; private set; }
     public List<StageData> StageDataList { get; private set; }
-    public List<LevelData> levelDataList { get; private set; }
+    public List<LevelData> heroLevelDataList { get; private set; }
     public List<StageEXP> stageEXPList { get; private set; }
     public User CurrentUser { get; private set; }
     public MainUI MainUI { get; private set; }
@@ -88,13 +88,13 @@ public class GameManager : Singleton<GameManager>
             HeroRatesList.Add(dataLoader.LoadRateData(Path.Combine(Application.dataPath, rateDataFilePath)));
         }
         StageDataList = dataLoader.LoadStageData(Path.Combine(Application.dataPath, stageDataFilePath));
-        levelDataList = dataLoader.LoadLevelData(Path.Combine(Application.dataPath, levelDataFilePath));
+        heroLevelDataList = dataLoader.LoadLevelData(Path.Combine(Application.dataPath, heroLevelDataFilePath));
         stageEXPList = dataLoader.LoadStageEXP(Path.Combine(Application.dataPath, stageEXPFilePath));
 
         Debug.Log($"Loaded {HeroList.heroes.Count} heroes.");
         Debug.Log($"Loaded {HeroRatesList.Count} heroRates.");
         Debug.Log($"Loaded {StageDataList.Count} stages.");
-        Debug.Log($"Loaded {levelDataList.Count} levels.");
+        Debug.Log($"Loaded {heroLevelDataList.Count} levels.");
         Debug.Log($"Loaded {stageEXPList.Count} stageEXPs.");
     }
 
