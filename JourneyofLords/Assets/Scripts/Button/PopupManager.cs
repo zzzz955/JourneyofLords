@@ -18,11 +18,6 @@ public class PopupManager : MonoBehaviour
 
     public void ShowPopup(GameObject popupPrefab)
     {
-        // if (currentPopup != null)
-        // {
-        //     Destroy(currentPopup);
-        // }
-
         currentPopup = Instantiate(popupPrefab, popupCanvas.transform);
         currentPopup.SetActive(true);
     }

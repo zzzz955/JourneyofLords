@@ -14,12 +14,14 @@ public class GameManager : Singleton<GameManager>
     private string stageDataFilePath = "Scripts/GameData/StageData.xlsx";
     private string heroLevelDataFilePath = "Scripts/GameData/HeroLevelData.xlsx";
     private string stageEXPFilePath = "Scripts/GameData/StageEXP.xlsx";
+    private string equipDataFilePath = "Scripts/GameData/EquipData.xlsx";
 
     public HeroList HeroList { get; private set; }
     public List<List<HeroRate>> HeroRatesList { get; private set; }
     public List<StageData> StageDataList { get; private set; }
     public List<LevelData> heroLevelDataList { get; private set; }
     public List<StageEXP> stageEXPList { get; private set; }
+    public List<Equip> equipList { get; private set; }
     public User CurrentUser { get; private set; }
     public MainUI MainUI { get; private set; }
     public HeroManager HeroManager { get; private set; }
@@ -90,12 +92,14 @@ public class GameManager : Singleton<GameManager>
         StageDataList = dataLoader.LoadStageData(Path.Combine(Application.dataPath, stageDataFilePath));
         heroLevelDataList = dataLoader.LoadLevelData(Path.Combine(Application.dataPath, heroLevelDataFilePath));
         stageEXPList = dataLoader.LoadStageEXP(Path.Combine(Application.dataPath, stageEXPFilePath));
+        equipList = dataLoader.LoadEquipData(Path.Combine(Application.dataPath, equipDataFilePath));
 
         Debug.Log($"Loaded {HeroList.heroes.Count} heroes.");
         Debug.Log($"Loaded {HeroRatesList.Count} heroRates.");
         Debug.Log($"Loaded {StageDataList.Count} stages.");
         Debug.Log($"Loaded {heroLevelDataList.Count} levels.");
         Debug.Log($"Loaded {stageEXPList.Count} stageEXPs.");
+        Debug.Log($"Loaded {equipList.Count} equips.");
     }
 
     public void SetUserData(User userData)

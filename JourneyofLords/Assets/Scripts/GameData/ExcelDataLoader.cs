@@ -220,4 +220,39 @@ public class ExcelDataLoader : ScriptableObject
         }
         return stageEXPs;
     }
+
+    public List<Equip> LoadEquipData(string excelFilePath)
+    {
+        List<Equip> equips = new List<Equip>();
+        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+        using (var stream = File.Open(excelFilePath, FileMode.Open, FileAccess.Read))
+        {
+            using (var reader = ExcelReaderFactory.CreateReader(stream))
+            {
+                var result = reader.AsDataSet();
+                var table = result.Tables[0];
+
+                for (int i = 1; i < table.Rows.Count; i++)
+                {
+                    var row = table.Rows[i];
+                        Equip equip = new Equip
+                        {
+                            id = row[0].ToString(),
+                            index = int.Parse(row[1].ToString()),
+                            type = row[2].ToString(),
+                            rarity = int.Parse(row[3].ToString()),
+                            name = row[4].ToString(),
+                            level = int.Parse(row[5].ToString()),
+                            atk = float.Parse(row[6].ToString()),
+                            def = float.Parse(row[7].ToString()),
+                            hp = float.Parse(row[8].ToString()),
+                            description = row[9].ToString()
+                        };
+                        equips.Add(equip);
+                }
+            }
+        }
+        return equips;
+    }
 }

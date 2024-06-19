@@ -4047,12 +4047,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3476537ce420529418612e76de958ada, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heroDataFilePath: Scripts/GameData/HeroData.xlsx
-  rateDataFilePaths:
-  - Scripts/GameData/HeroRecruit1.xlsx
-  - Scripts/GameData/HeroRecruit2.xlsx
-  - Scripts/GameData/HeroRecruit3.xlsx
-  stageDataFilePath: Scripts/GameData/StageData.xlsx
   systemMessageTextPrefab: {fileID: 6873975627965138897, guid: 58091e4543f515a438086e02f5d87295, type: 3}
   systemMessageParent: {fileID: 579480317}
 --- !u!4 &1411151620
