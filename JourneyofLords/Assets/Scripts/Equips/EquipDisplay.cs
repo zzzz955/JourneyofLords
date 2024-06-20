@@ -48,20 +48,26 @@ public class EquipDisplay : MonoBehaviour
         // }
     }
 
-    // public void OnClick()
-    // {
-    //     GameObject popup = Instantiate(popupHeroDicPrefab, newCanvasObject.transform); // 부모를 설정 (메인 캔버스 또는 루트)
-    //     PopupHeroDisplay popupHeroDisplay = popup.GetComponent<PopupHeroDisplay>();
+    public void ShowOwnPopupEquip() {
+        GameObject popup = Instantiate(popupOwnEquipPrefab, transform.parent.parent); // 부모를 설정 (메인 캔버스 또는 루트)
+        PopupEquipDisplay popupEquipDisplay = popup.GetComponent<PopupEquipDisplay>();
 
-    //     if (popupHeroDisplay != null)
-    //     {
-    //         popupHeroDisplay.SetHeroData(currentHero, tempAtk, tempDef, tempHp);
-    //     }
-    //     else
-    //     {
-    //         Debug.LogError("PopupHeroDisplay component not found on popup.");
-    //     }
-    // }
+        if (popupEquipDisplay != null)
+        {
+            popupEquipDisplay.SetEquipData(currentEquip, tempAtk, tempDef, tempHp);
+        }
+    }
+
+    public void ShowPopupEquip()
+    {
+        GameObject popup = Instantiate(popupEquipPrefab, transform.parent.parent); // 부모를 설정 (메인 캔버스 또는 루트)
+        PopupEquipDisplay popupEquipDisplay = popup.GetComponent<PopupEquipDisplay>();
+
+        if (popupEquipDisplay != null)
+        {
+            popupEquipDisplay.SetEquipData(currentEquip, tempAtk, tempDef, tempHp);
+        }
+    }
 
     // public void UpdateStats(float newAtk, float newDef, float newHP, float atkBonusPercentage, float defBonusPercentage, float hpBonusPercentage)
     // {
