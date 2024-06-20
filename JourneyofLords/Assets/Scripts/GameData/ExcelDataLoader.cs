@@ -247,7 +247,8 @@ public class ExcelDataLoader : ScriptableObject
                             atk = float.Parse(row[6].ToString()),
                             def = float.Parse(row[7].ToString()),
                             hp = float.Parse(row[8].ToString()),
-                            description = row[9].ToString()
+                            spriteName = row[9].ToString(),
+                            description = row[10].ToString()
                         };
                         equips.Add(equip);
                 }

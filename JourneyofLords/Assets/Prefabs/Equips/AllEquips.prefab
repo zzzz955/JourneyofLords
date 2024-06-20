@@ -879,6 +879,8 @@ MonoBehaviour:
   - {fileID: 2311583082664517545}
   - {fileID: 5496913121919846432}
   selectedColor: {r: 0, g: 1, b: 0, a: 1}
+  equipSlot: {fileID: 7575144348165934858, guid: db8c87932b238844fa952228e5da8268, type: 3}
+  equipTransfrom: {fileID: 2849865120751389443}
 --- !u!114 &2427293542571626377
 MonoBehaviour:
   m_ObjectHideFlags: 0

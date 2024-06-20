@@ -1426,6 +1426,7 @@ GameObject:
   m_Component:
   - component: {fileID: 604931708}
   - component: {fileID: 604931711}
+  - component: {fileID: 604931713}
   - component: {fileID: 604931712}
   - component: {fileID: 604931710}
   - component: {fileID: 604931709}
@@ -1550,6 +1551,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd9467d508e77948b9e37f4f643739a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &604931713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 604931707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6cf47f2228ade04580b92ef2531783b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  popupPrefab: {fileID: 0}
 --- !u!1 &615923987
 GameObject:
   m_ObjectHideFlags: 0
@@ -3572,6 +3586,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1470008735}
   - component: {fileID: 1470008738}
+  - component: {fileID: 1470008740}
   - component: {fileID: 1470008739}
   - component: {fileID: 1470008737}
   - component: {fileID: 1470008736}
@@ -3645,7 +3660,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1470008737}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1470008740}
+        m_TargetAssemblyTypeName: HUDButton, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1470008737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3696,6 +3723,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd9467d508e77948b9e37f4f643739a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1470008740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1470008734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6cf47f2228ade04580b92ef2531783b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  popupPrefab: {fileID: 3042313187052476900, guid: 442dfd9e8479ab54c910eb951ecccc95, type: 3}
 --- !u!1 &1483192611
 GameObject:
   m_ObjectHideFlags: 0

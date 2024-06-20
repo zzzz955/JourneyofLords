@@ -34,5 +34,8 @@ public class Equip
     public float hp { get; set; }
 
     [FirestoreProperty]
+    public string spriteName { get; set; }
+
+    [FirestoreProperty]
     public string description { get; set; }
 }
